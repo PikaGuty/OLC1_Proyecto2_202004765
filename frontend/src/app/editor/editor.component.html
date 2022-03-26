@@ -9,9 +9,9 @@
                 </div>
                 
                 <div>
-                    <button type="button" class="btn btn-info"><i class="fa-solid fa-file"></i> Nuevo</button>&nbsp;
-                    <button type="button" class="btn btn-primary"><i class="fa-solid fa-folder-open"></i> Abrir</button>&nbsp;
-                    <button type="button" class="btn btn-success"><i class="fa-solid fa-folder"></i> Guardar</button>
+                    <button type="button" (click)="nuevo()" class="btn btn-info"><i class="fa-solid fa-file"></i> Nuevo</button>&nbsp;
+                    <button type="button" (click)="guardar()" class="btn btn-success"><i class="fa-solid fa-folder"></i> Guardar</button> &nbsp;
+                    <input type="file" (change)="abrir($event)" class="btn btn-primary"> &nbsp;
                 </div>    
                 <div class="row">
                     <br>
@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" ></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" [(ngModel)]=contenido ></textarea>
                                     </div>
                                 </div>
                             </div>
