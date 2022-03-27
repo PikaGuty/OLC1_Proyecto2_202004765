@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as FileSaver from 'file-saver';
+import { BackendService } from '../services/backend.service';
 
 
 @Component({
@@ -12,11 +13,27 @@ export class EditorComponent implements OnInit {
   contenido:any
   consola = ""
 
-  constructor() { }
+  constructor(private backend: BackendService) { 
+    this.Ejecutar()
+  }
 
   ngOnInit(): void {
   }
 
+  Ejecutar(){
+    this.backend.VerRegistros().subscribe(
+      res=>{
+        var data = JSON.stringify(res)
+        var data2 = JSON.parse(data)
+        var longitud=data2.length
+        this.consola=this.consola+""+data
+      },
+      err=>{
+        console.log("Error")
+      }
+    )
+  }
+  
   abrir(event:any) {
     const file = event.target.files[0];
    

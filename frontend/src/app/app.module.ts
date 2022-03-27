@@ -11,6 +11,7 @@ import { TablaSimbolosComponent } from './tabla-simbolos/tabla-simbolos.componen
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from '@materia-ui/ngx-monaco-editor';
 import { FootComponent } from './foot/foot.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FootComponent } from './foot/foot.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    MonacoEditorModule
+    MonacoEditorModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
