@@ -1,0 +1,15 @@
+//hola
+//imprimir
+        /* Este es un 
+            comentario multilinea 
+alv*/
+
+int entero = 3, entero2, entero3=2;
+double decimal2, decimal = 2.3;
+char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';
+boolean bo = true, bo2 = false, bod;
+String str = "\"Hola yo soy elmotor\'", s, st="hola";
+
+int casteo = (int) 3.2;
+casteo++;
+casteo--;
