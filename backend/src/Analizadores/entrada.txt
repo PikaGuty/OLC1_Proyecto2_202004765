@@ -10,6 +10,42 @@ char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', car
 boolean bo = true, bo2 = false, bod;
 String str = "\"Hola yo soy elmotor\'", s, st="hola";
 
+
 int casteo = (int) 3.2;
 casteo++;
 casteo--;
+
+string vector2[] = ["hola", "Mundo"]; 
+int vectorNumero[] = [2020,2021,2022];
+vector2[0] = "OLC1";
+vector2[1] = "1er Semestre ";
+String str = vector2[0];
+
+if ("ads")
+    {
+        int a;
+    }
+
+if ("as")
+    {
+    //Más sentencias
+    }
+else
+    {
+    //Más sentencias
+    }
+
+if ("as"){
+    //Más sentencias
+}else if ("as"){
+    if (""){
+        //Más sentencias
+        int a = 9;
+    }else{
+        a=21;
+        a = (int) 4.2;
+    }
+    //Más sentencias
+}else{
+    //Más sentencias
+}
