@@ -85,6 +85,9 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 "<="					    return 'MENIGUALQ';
 ">"					        return 'MAYORQ';
 ">="					    return 'MAYIGUALQ';
+"!"					        return 'DIF';
+"||"					    return 'OR';
+"&&"					    return 'AND';
 
 
 //********** Expresiones **********
@@ -100,9 +103,49 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 
 /lex
 
+%{
+    funcion nodo(etiqueta, valor, fila, columna){
+        this.etiqueta=etiqueta;
+        this.valor=valor;
+        this.fila=fila;
+        this.columna=columna;
+
+        this.hijos=[];
+        this.addHijos=addHijos();
+        this.getHijos=getHijos();
+
+        function addHijos(){
+            for(var i=0; i<arguments.length;i++){
+                this.hijos.push(arguments[i]);
+                if(arguments[i]!=null){
+                    arguments[i].padre=this;
+                }
+            }
+        }
+
+        funcion getHijos(pos){
+            if (pos>this.hijos.length-1) return null;
+            return this.hijos[pos]
+        }
+    }
+}
+
+//PRECEDENCIA
+%left 'OR'
+%left 'AND'
+%right 'DIF'
+%left 'IGUALACION' 'DIFERENCIACION' 'MENORQ' 'MENIGUALQ' 'MAYORQ' 'MAYIGUALQ'
+%left 'MAS' 'MENOS'
+%left 'DIV' 'POR' 'MODULO'
+%nonassoc 'POTENCIA'
+%right 'MENOS' UMINUS
+
+%left 'PARIZQ' 'PARDER'
+
 %start ini
 
-%% /* Definición de la gramática */
+%% 
+/* Definición de la gramática */
 
 ini
     : instrucciones EOF
@@ -123,6 +166,19 @@ instruccion
     | mod_vectores
     | sen_if
     | asig_solo
+    | sen_switch
+    | sen_while
+    | sen_for
+    | sen_dowhile
+    | sen_return
+    | R_BREAK PTCOMA
+    | R_CONTINUE PTCOMA
+    | metodos
+    | funcion
+    | llamada
+    | fprint
+    | fprintln
+    | frun
     | 
 ;
 //#############################################
@@ -136,6 +192,7 @@ tipo
     | R_STRING
 ;
 
+
 //POSIBLES VALORES PARA LOS TIPOS
 expresion
     : ENTERO
@@ -147,6 +204,14 @@ expresion
     | IDENTIFICADOR //PA ABAJO OTRAS COMBINACIONES
     | acs_vectores
     | casteo
+    | ftolower
+    | ftoupper
+    | fround
+    | flength
+    | ftypeof
+    | ftostring
+    | ftochararray
+    | llamada_sin
 ;
 
 //LISTA DE VALORES
@@ -190,6 +255,11 @@ inc_dec
     | expresion MENOS MENOS PTCOMA{console.log($1+""+$2+""+$3)}
 ;
 
+inc_decf
+    : expresion MAS MAS{console.log($1+""+$2+""+$3)}
+    | expresion MENOS MENOS{console.log($1+""+$2+""+$3)}
+;
+
 //******************************** VECTORES *******************************
 //DECLARACION
 dec_vectores
@@ -198,7 +268,10 @@ dec_vectores
     | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL tipo CORIZQ expresion CORDER CORIZQ expresion CORDER PTCOMA
     //TIPO 2 
     | tipo IDENTIFICADOR CORIZQ CORDER IGUAL CORIZQ lista CORDER PTCOMA
-    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL CORIZQ listavec CORDER PTCOMA
+    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ listavec CORDER PTCOMA
+    
+    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL expresion PTCOMA
+    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ lista CORDER PTCOMA
 ;
 
 //ACCESO
@@ -219,4 +292,123 @@ sen_if
     | R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER R_ELSE sen_if
 ;
 
+//************************* SENTENCIA DE CONTROL SWITCH ************************
+sen_switch
+    : R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case s_default  LLAVDER 
+    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case LLAVDER
+    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ s_default LLAVDER
+;
+
+list_case
+    : list_case s_case
+    | s_case
+;
+
+s_case
+    : R_CASE expresion DOSPTS instrucciones
+;
+
+s_default
+    : R_DEFAULT DOSPTS instrucciones
+;
+
+//************************* SENTENCIA CICLICA WHILE ************************
+sen_while
+    : R_WHILE PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER
+;
+
+//************************* SENTENCIA CICLICA FOR ************************
+sen_for
+    : R_FOR PARIZQ declaracion expresion PTCOMA inc_decf PARDER LLAVIZQ instrucciones LLAVDER
+    | R_FOR PARIZQ asig_solo expresion PTCOMA inc_decf PARDER LLAVIZQ instrucciones LLAVDER
+    
+;
+
+//************************* SENTENCIA CICLICA DO WHILE ************************
+sen_dowhile
+    : R_DO LLAVIZQ instrucciones LLAVDER R_WHILE PARIZQ expresion PARDER PTCOMA
+;
+
+//************************* SENTENCIA RETURN ************************
+sen_return
+    : R_RETURN expresion PTCOMA
+;
+
+//************************* FUNCIONES ************************
+
+funcion
+    : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER
+;
+
+parametros 
+    : parametros COMA tipo IDENTIFICADOR
+    | tipo IDENTIFICADOR
+    | 
+;
+
+//************************* METODOS ************************
+metodos
+    : IDENTIFICADOR PARIZQ parametros PARDER LLAVIZQ instrucciones LLAVDER
+    | IDENTIFICADOR PARIZQ parametros PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER
+    | IDENTIFICADOR PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER
+;
+
+llamada
+    : IDENTIFICADOR PARIZQ parametros_llamada PARDER PTCOMA
+    | IDENTIFICADOR PARIZQ PARDER PTCOMA
+;
+
+llamada_sin
+    : IDENTIFICADOR PARIZQ parametros_llamada PARDER 
+    | IDENTIFICADOR PARIZQ PARDER
+;
+
+parametros_llamada
+    : parametros_llamada COMA expresion
+    | expresion
+;
+
+//************************* PRINT ************************
+fprint
+    : R_PRINT PARIZQ expresion PARDER PTCOMA
+;
+//************************* PRINT LN ************************
+fprintln
+    : R_PRINTLN PARIZQ expresion PARDER PTCOMA
+;
+//************************* TO LOWER ************************
+ftolower
+    : R_TOLOWER PARIZQ expresion PARDER 
+;
+//************************* TO UPPER ************************
+ftoupper
+    : R_TOUPPER PARIZQ expresion PARDER 
+;
+//************************* ROUND ************************
+fround
+    : R_ROUND PARIZQ DECIMAL PARDER 
+;
+//************************* LENGTH ************************
+flength
+    : R_LENGTH PARIZQ expresion PARDER 
+;
+//************************* TYPEOF ************************
+ftypeof
+    : R_TYPEOF PARIZQ expresion PARDER 
+;
+//************************* TO STRING ************************
+ftostring
+    : R_TOSTRING PARIZQ expresion PARDER
+;
+//************************* TO CHAR ARRAY ************************
+ftochararray
+    : R_TOCHARARRAY PARIZQ expresion PARDER
+;
+//************************* RUN ************************
+frun
+    : R_RUN IDENTIFICADOR PARIZQ parametros_llamada PARDER PTCOMA
+    | R_RUN IDENTIFICADOR PARIZQ PARDER PTCOMA
+;
 //*************************************************************************

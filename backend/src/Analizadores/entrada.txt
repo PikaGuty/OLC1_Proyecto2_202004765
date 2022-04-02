@@ -49,3 +49,67 @@ if ("as"){
 }else{
     //Más sentencias
 }
+
+switch( edad ) { 
+    Case 10: 
+        // mas sentencias 
+        Break; 
+    Case 18: 
+        // mas sentencias 
+    Case 25: 
+        // mas sentencias Break; 
+    Default: 
+        // mas sentencias 
+        Break; 
+}
+
+while (x){
+    
+}
+
+for ( int i=0; i;i++ ){
+    //Println(“i=”+i)
+    //más sentencias
+}
+
+Do{
+    If (a){ 
+        //Println(true)
+    }
+    Else{
+        //Println(false)
+    }
+    a--;
+} while (a);
+
+holacompi(){
+    Print("Hola Compi 1");
+}
+
+suma(int num1, int num2):int {
+    //Println(“Aquí puede venir cualquier sentencia :D”);  
+}
+
+/**/
+
+HolaCompi(): void {
+    Println("Hola Compi 1");
+}
+
+HolaCompi(int a, int b): void {
+    Println("Hola Compi 1");
+}
+
+holamundo();
+suma(2,3.4);
+
+run funcion1();
+run funcion1(3,"hola");
+
+string cad_1 = toLower("hOla MunDo");
+string cad_1 = toUpper("hOla MunDo");
+Double valor = round(5.8);
+int tam_vector = length(vector2);
+String tipo = typeof(15);
+String valor = toString(14);
+Char caracteres[] = toCharArray("Hola");
