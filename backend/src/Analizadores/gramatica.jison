@@ -195,7 +195,24 @@ tipo
 
 //POSIBLES VALORES PARA LOS TIPOS
 expresion
-    : ENTERO
+    : expresion POTENCIA expresion
+    | expresion MAS expresion
+    | expresion MENOS expresion
+    | expresion POR expresion
+    | expresion DIV expresion
+    | expresion MODULO expresion
+    | MENOS expresion %UMINUS
+    | PARIZQ expresion PARDER
+    | DIF expresion
+    | expresion IGUALACION expresion
+    | expresion DIFERENCIACION expresion
+    | expresion MENORQ expresion
+    | expresion MENIGUALQ expresion
+    | expresion MAYORQ expresion
+    | expresion MAYIGUALQ expresion
+    | expresion OR expresion
+    | expresion AND expresion //PA ABAJO DATOS EN SI
+    | ENTERO
     | DECIMAL
     | R_TRUE
     | R_FALSE
