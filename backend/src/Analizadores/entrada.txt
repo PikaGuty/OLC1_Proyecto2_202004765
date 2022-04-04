@@ -8,7 +8,7 @@ int entero = 3, entero2, entero3=2;
 double decimal2, decimal = 2.3;
 char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';
 boolean bo = true, bo2 = false, bod;
-String str = "\"Hola yo soy elmotor\'", s, st="hola";
+String str = "\"Hola yo soy elmotor\"", s, st="hola";
 
 
 int casteo = (int) 3.2;
@@ -21,7 +21,7 @@ vector2[0] = "OLC1";
 vector2[1] = "1er Semestre ";
 String str = vector2[0];
 
-if ("ads")
+if ("ads">2)
     {
         int a;
     }
@@ -90,7 +90,6 @@ suma(int num1, int num2):int {
     //Println(“Aquí puede venir cualquier sentencia :D”);  
 }
 
-/**/
 
 HolaCompi(): void {
     Println("Hola Compi 1");
