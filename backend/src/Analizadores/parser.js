@@ -27,12 +27,17 @@ function imprimir(raiz){
     
         if(typeof hijs=="string")return;
         hijs.hijos.forEach(nodo=> {
-          if(typeof nodo.etiqueta=="undefined")return;
-          let nombrehijo="Node"+contador;
-          texto+=nombrehijo+"[label=\"" + escapar(nodo.etiqueta) +" | "+escapar(nodo.valor) + "\"];\n";
-          texto+=padre+"->"+nombrehijo+";\n";
-          contador++;
-          recorrido(nombrehijo,nodo);
+            try{
+                if(typeof nodo.etiqueta=="undefined")return;
+            }catch(e){
+                return
+            }
+          
+            let nombrehijo="Node"+contador;
+            texto+=nombrehijo+"[label=\"" + escapar(nodo.etiqueta) +" | "+escapar(nodo.valor) + "\"];\n";
+            texto+=padre+"->"+nombrehijo+";\n";
+            contador++;
+            recorrido(nombrehijo,nodo);
         })
     
     }

@@ -81,10 +81,10 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 //********** Operadores Relacionales **********
 "=="					    return 'IGUALACION';
 "!="					    return 'DIFERENCIACION';
-"<"					        return 'MENORQ';
 "<="					    return 'MENIGUALQ';
-">"					        return 'MAYORQ';
 ">="					    return 'MAYIGUALQ';
+"<"					        return 'MENORQ';
+">"					        return 'MAYORQ';
 "!"					        return 'DIF';
 "||"					    return 'OR';
 "&&"					    return 'AND';
@@ -165,8 +165,8 @@ instruccion
     | sen_for {$$=$1}
     | sen_dowhile PTCOMA {$$=$1}
     | sen_return PTCOMA {$$=$1}
-    | R_BREAK PTCOMA {$$=$1}
-    | R_CONTINUE PTCOMA {$$=$1}
+    | R_BREAK PTCOMA {$$= new nodo("Break",$1,this._$.first_line,@1.last_column);}
+    | R_CONTINUE PTCOMA {$$= new nodo("Continue",$1,this._$.first_line,@1.last_column);}
     | metodos {$$=$1}
     | funcion {$$=$1}
     | llamada PTCOMA {$$=$1}
@@ -234,12 +234,12 @@ expresion
 ;
 //LISTA DE VALORES
 lista 
-    : lista COMA expresion
-    | expresion
+    : lista COMA expresion {$1.addHijos($3); $$=$1;}
+    | expresion {$$= new nodo("ListVec1","ListVec1",this._$.first_line,@1.last_column); $$.addHijos($1);}
 ;
 listavec
-    : listavec COMA CORIZQ lista CORDER
-    | COMA CORIZQ lista CORDER
+    : listavec COMA CORIZQ lista CORDER {$1.addHijos($4); $$=$1;}
+    | CORIZQ lista CORDER {$$= new nodo("ListVec2","ListVec2",this._$.first_line,@1.last_column); $$.addHijos($2);}
 ;
 //***************** Declaración y asignación de variables *****************
 declaracion
@@ -254,92 +254,88 @@ asig
     | IDENTIFICADOR {$$=new nodo("id",$1,this._$.first_line,@1.last_column)}
 ;
 asig_solo
-    : IDENTIFICADOR IGUAL expresion  {console.log($1+' = '+$3)}
+    : IDENTIFICADOR IGUAL expresion  {$$= new nodo("Asig","Asig"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3)}
 ;
 //********************************* CASTEO ********************************
 casteo
-    : PARIZQ tipo PARDER expresion {$$=$1+""+$2+""+$3+""+$4}
+    : PARIZQ tipo PARDER expresion {$$= new nodo("Cast","Cast"); $$.addHijos($2,$4)}
 ;
 //************************ INCREMENTO Y DECREMENTO ************************
 inc_dec
-    : expresion MAS MAS {console.log($1+""+$2+""+$3)}
-    | expresion MENOS MENOS {console.log($1+""+$2+""+$3)}
+    : expresion MAS MAS {$$= new nodo("Incr","Incr"); $$.addHijos($1)}
+    | expresion MENOS MENOS {$$= new nodo("Decr","Decr"); $$.addHijos($1)}
 ;
-inc_decf
-    : expresion MAS MAS{console.log($1+""+$2+""+$3)}
-    | expresion MENOS MENOS{console.log($1+""+$2+""+$3)}
-;
+
 //******************************** VECTORES *******************************
 //DECLARACION
 dec_vectores
     //TIPO 1
-    : tipo IDENTIFICADOR CORIZQ CORDER IGUAL tipo CORIZQ expresion CORDER 
-    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL tipo CORIZQ expresion CORDER CORIZQ expresion CORDER 
+    : tipo IDENTIFICADOR CORIZQ CORDER IGUAL R_NEW tipo CORIZQ expresion CORDER {$$= new nodo("DecVec1","DecVec1"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$7,$9)}
+    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL R_NEW tipo CORIZQ expresion CORDER CORIZQ expresion CORDER {$$= new nodo("DecVec2","DecVec2"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$9,$11,$14)}
     //TIPO 2 
-    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL CORIZQ lista CORDER 
-    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ listavec CORDER 
+    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL CORIZQ lista CORDER {$$= new nodo("DecVec1","DecVec1"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$7)}
+    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ listavec CORDER {$$= new nodo("DecVec2","DecVec2"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$9)}
     
-    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL expresion 
-    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ lista CORDER 
+    | tipo IDENTIFICADOR CORIZQ CORDER IGUAL expresion {$$= new nodo("DecVec1","DecVec1"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$6)}
+    | tipo IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ lista CORDER {$$= new nodo("DecVec1","DecVec1"); $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column),$9)}
 ;
 //ACCESO
 acs_vectores
-    : IDENTIFICADOR CORIZQ ENTERO CORDER
-    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER
+    : IDENTIFICADOR CORIZQ ENTERO CORDER {$$= new nodo("acsVec1","acsVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3)}
+    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER {$$= new nodo("acsVec2","acsVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
 ;
 //MODIFICAR
 mod_vectores
-    : IDENTIFICADOR CORIZQ ENTERO CORDER IGUAL expresion 
-    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL expresion 
+    : IDENTIFICADOR CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec1","modVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
+    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec2","modVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$9)}
 ;
 //************************* SENTENCIA DE CONTRO IF ************************
 sen_if
-    : R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER
-    | R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER R_ELSE LLAVIZQ instrucciones LLAVDER
-    | R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER R_ELSE sen_if
+    : R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("CIf","CIf"); $$.addHijos($3,$6)}
+    | R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER R_ELSE LLAVIZQ instrucciones LLAVDER {$$= new nodo("CIf","CIf"); $8=new nodo("CElse","CElse"); $$.addHijos($3,$6,$8); $8.addHijos($10);}
+    | R_IF PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER R_ELSE sen_if {$$= new nodo("CIf","CIf"); $8=new nodo("CElse","CElse"); $$.addHijos($3,$6,$8); $8.addHijos($9);}
 ;
 //************************* SENTENCIA DE CONTROL SWITCH ************************
 sen_switch
-    : R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case s_default  LLAVDER 
-    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case LLAVDER
-    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ s_default LLAVDER
+    : R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case s_default  LLAVDER {$$= new nodo("CSwitch","CSwitch"); $$.addHijos($3,$6,$7)}
+    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ list_case LLAVDER {$$= new nodo("CSwitch","CSwitch"); $$.addHijos($3,$6)}
+    | R_SWITCH PARIZQ expresion PARDER LLAVIZQ s_default LLAVDER {$$= new nodo("CSwitch","CSwitch"); $$.addHijos($3,$6)}
 ;
 list_case
-    : list_case s_case
-    | s_case
+    : list_case s_case {$1.addHijos($2); $$=$1;}
+    | s_case {$$= new nodo("ListCase","ListCase",this._$.first_line,@1.last_column); $$.addHijos($1);}
 ;
 s_case
-    : R_CASE expresion DOSPTS instrucciones
+    : R_CASE expresion DOSPTS instrucciones {$$= new nodo("SCase","SCase"); $$.addHijos($2,$4)}
 ;
 s_default
-    : R_DEFAULT DOSPTS instrucciones
+    : R_DEFAULT DOSPTS instrucciones {$$= new nodo("SDefault","SDefault"); $$.addHijos($3);}
 ;
 //************************* SENTENCIA CICLICA WHILE ************************
 sen_while
-    : R_WHILE PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER
+    : R_WHILE PARIZQ expresion PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SWhile","SWhile"); $$.addHijos($3,$6);}
 ;
 //************************* SENTENCIA CICLICA FOR ************************
 sen_for
-    : R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA inc_decf PARDER LLAVIZQ instrucciones LLAVDER
-    | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_decf PARDER LLAVIZQ instrucciones LLAVDER
-    
+    : R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
+    | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
 ;
 //************************* SENTENCIA CICLICA DO WHILE ************************
 sen_dowhile
-    : R_DO LLAVIZQ instrucciones LLAVDER R_WHILE PARIZQ expresion PARDER 
+    : R_DO LLAVIZQ instrucciones LLAVDER R_WHILE PARIZQ expresion PARDER {$$= new nodo("SDoWhile","SDoWhile"); $$.addHijos($3,$7);}
 ;
 //************************* SENTENCIA RETURN ************************
 sen_return
-    : R_RETURN expresion 
+    : R_RETURN expresion {$$= new nodo("SReturn","SReturn"); $$.addHijos($2);}
 ;
 //************************* FUNCIONES ************************
 funcion
-    : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER
-    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER
+    : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos($1,$3,$6,$8);}
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos($1,$5,$7);}
 ;
 parametros 
-    : parametros COMA tipo IDENTIFICADOR
-    | tipo IDENTIFICADOR
+    : parametros COMA tipo IDENTIFICADOR {$1.addHijos($3); $$=$1;}
+    | tipo IDENTIFICADOR {$$= new nodo("FParametros","FParametros"); $$.addHijos($1)}
     | 
 ;
 //************************* METODOS ************************
