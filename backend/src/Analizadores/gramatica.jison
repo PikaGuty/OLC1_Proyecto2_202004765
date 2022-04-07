@@ -330,68 +330,72 @@ sen_return
 ;
 //************************* FUNCIONES ************************
 funcion
-    : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos($1,$3,$6,$8);}
-    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos($1,$5,$7);}
+    : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$8);}
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$5,$7);}
 ;
+
 parametros 
-    : parametros COMA tipo IDENTIFICADOR {$1.addHijos($3); $$=$1;}
-    | tipo IDENTIFICADOR {$$= new nodo("FParametros","FParametros"); $$.addHijos($1)}
+    : parametros COMA parmetro {$1.addHijos($3); $$=$1;}
+    | parmetro {$$= new nodo("FParametros","FParametros");  $$.addHijos($1)}
     | 
+;
+
+parmetro 
+    : tipo IDENTIFICADOR {$$= new nodo("FPmt","FPmt");  $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column))}
 ;
 //************************* METODOS ************************
 metodos
-    : IDENTIFICADOR PARIZQ parametros PARDER LLAVIZQ instrucciones LLAVDER
-    | IDENTIFICADOR PARIZQ parametros PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER
-    | IDENTIFICADOR PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
-    | IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER
+    : IDENTIFICADOR PARIZQ parametros PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6);}
+    | IDENTIFICADOR PARIZQ parametros PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$8);}
+    | IDENTIFICADOR PARIZQ PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$5);}
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$7);}
 ;
 llamada
-    : IDENTIFICADOR PARIZQ parametros_llamada PARDER 
-    | IDENTIFICADOR PARIZQ PARDER 
+    : IDENTIFICADOR PARIZQ PARDER  {$$= new nodo("SLlamada","SLlamada"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column));}
+    | IDENTIFICADOR PARIZQ parametros_llamada PARDER {$$= new nodo("SLlamada","SLlamada"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3);}
 ;
 parametros_llamada
-    : parametros_llamada COMA expresion
-    | expresion
+    : parametros_llamada COMA expresion {$1.addHijos($3); $$=$1;}
+    | expresion {$$= new nodo("FParametrosLL","FParametrosLL");  $$.addHijos($1)}
 ;
 //************************* PRINT ************************
 fprint
-    : R_PRINT PARIZQ expresion PARDER 
+    : R_PRINT PARIZQ expresion PARDER  {$$= new nodo("FPrint","FPrint"); $$.addHijos($3)}
 ;
 //************************* PRINT LN ************************
 fprintln
-    : R_PRINTLN PARIZQ expresion PARDER 
+    : R_PRINTLN PARIZQ expresion PARDER {$$= new nodo("FPrintln","FPrintln"); $$.addHijos($3)}
 ;
 //************************* TO LOWER ************************
 ftolower
-    : R_TOLOWER PARIZQ expresion PARDER 
+    : R_TOLOWER PARIZQ expresion PARDER {$$= new nodo("FToLower","FToLower"); $$.addHijos($3)}
 ;
 //************************* TO UPPER ************************
 ftoupper
-    : R_TOUPPER PARIZQ expresion PARDER 
+    : R_TOUPPER PARIZQ expresion PARDER {$$= new nodo("FToUpper","FToUpper"); $$.addHijos($3)}
 ;
 //************************* ROUND ************************
 fround
-    : R_ROUND PARIZQ DECIMAL PARDER 
+    : R_ROUND PARIZQ DECIMAL PARDER {$$= new nodo("FRound","FRound"); $$.addHijos($3)}
 ;
 //************************* LENGTH ************************
 flength
-    : R_LENGTH PARIZQ expresion PARDER 
+    : R_LENGTH PARIZQ expresion PARDER {$$= new nodo("FLength","FLength"); $$.addHijos($3)}
 ;
 //************************* TYPEOF ************************
 ftypeof
-    : R_TYPEOF PARIZQ expresion PARDER 
+    : R_TYPEOF PARIZQ expresion PARDER {$$= new nodo("FTypeOf","FTypeOf"); $$.addHijos($3)}
 ;
 //************************* TO STRING ************************
 ftostring
-    : R_TOSTRING PARIZQ expresion PARDER
+    : R_TOSTRING PARIZQ expresion PARDER {$$= new nodo("FToString","FToString"); $$.addHijos($3)}
 ;
 //************************* TO CHAR ARRAY ************************
 ftochararray
-    : R_TOCHARARRAY PARIZQ expresion PARDER
+    : R_TOCHARARRAY PARIZQ expresion PARDER {$$= new nodo("FToCharArray","FToCharArray"); $$.addHijos($3)}
 ;
 //************************* RUN ************************
 frun
-    : R_RUN IDENTIFICADOR PARIZQ parametros_llamada PARDER 
-    | R_RUN IDENTIFICADOR PARIZQ PARDER 
+    : R_RUN llamada {$$= new nodo("FRun","FRun"); $$.addHijos($2)}
 ;
 //*************************************************************************

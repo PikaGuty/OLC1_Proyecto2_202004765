@@ -24,16 +24,25 @@ vector2[1][2] = "1er Semestre ";
 String str = vector2[0];
 */
 
-Do{
-    If (a){ 
-        a=1;
-    }
-    Else{
-        s=4;
-        return hola;
-    }
-    a--;
-} while (a);
+holacompi(){
+    Print("Hola Compi 1");
+}
+
+suma(int num1, int num2):int {
+    //Println(“Aquí puede venir cualquier sentencia :D”);  
+}
+
+suma():int {
+    //Println(“Aquí puede venir cualquier sentencia :D”);  
+}
+
+HolaCompi(): void {
+    Println("Hola Compi 1");
+}
+
+HolaCompi(int a, int b): void {
+    Println("Hola Compi 1");
+}
 
 /*
 string vector2[] = ["hola", "Mundo"]; 
@@ -132,4 +141,5 @@ Double valor = round(5.8);
 int tam_vector = length(vector2);
 String tipo = typeof(15);
 String valor = toString(14);
-Char caracteres[] = toCharArray("Hola");*/
+Char caracteres[] = toCharArray("Hola");
+*/
