@@ -1,8 +1,11 @@
 class simbolo {
-    constructor(nombre,tipo,valor){
+    constructor(nombre,tipo1,tipo2,valor,linea,columna){
         this.nombre = nombre;
-        this.tipo = tipo;
+        this.tipo1 = tipo1;
+        this.tipo2 = tipo2;
         this.valor = valor;
+        this.linea = linea;
+        this.columna =  columna;
     }
 }
 

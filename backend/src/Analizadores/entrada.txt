@@ -3,9 +3,9 @@
         /* Este es un 
             comentario multilinea 
 alv*/
-/*
-int entero = 3, entero2, entero3=2;
-double decimal2, decimal = 2.3;
+
+string entero = 'a', entero2, entero3="a2",a='aas';
+/*double decimal2, decimal = 2.3;
 char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';
 boolean bo = true, bo2 = false, bod;
 String str = "\"Hola yo soy elmotor\"", s, st="hola";
@@ -22,29 +22,11 @@ char vectordosd2 [][] = [[0,0],[0,0]];
 vector2[0] = "OLC1";
 vector2[1][2] = "1er Semestre ";
 String str = vector2[0];
-*/
 
-holacompi(){
-    Print("Hola Compi 1");
-}
 
-suma(int num1, int num2):int {
-    //Println(“Aquí puede venir cualquier sentencia :D”);  
-}
 
-suma():int {
-    //Println(“Aquí puede venir cualquier sentencia :D”);  
-}
 
-HolaCompi(): void {
-    Println("Hola Compi 1");
-}
 
-HolaCompi(int a, int b): void {
-    Println("Hola Compi 1");
-}
-
-/*
 string vector2[] = ["hola", "Mundo"]; 
 int vectorNumero[] = [2020,2021,2022];
 vector2[0] = "OLC1";

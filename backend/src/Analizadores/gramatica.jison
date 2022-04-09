@@ -178,11 +178,11 @@ instruccion
 //#############################################
 //TIPOS DE DATOS
 tipo 
-    : R_INT  {$$= new nodo("Int","Int",this._$.first_line,@1.last_column);}
-    | R_DOUBLE {$$= new nodo("Double","Double",this._$.first_line,@1.last_column);}
-    | R_BOOLEAN {$$= new nodo("Boolean","Boolean",this._$.first_line,@1.last_column);}
-    | R_CHAR {$$= new nodo("Char","Char",this._$.first_line,@1.last_column);}
-    | R_STRING {$$= new nodo("String","String",this._$.first_line,@1.last_column);}
+    : R_INT  {$$= new nodo("Tipo","Int",this._$.first_line,@1.last_column);}
+    | R_DOUBLE {$$= new nodo("Tipo","Double",this._$.first_line,@1.last_column);}
+    | R_BOOLEAN {$$= new nodo("Tipo","Boolean",this._$.first_line,@1.last_column);}
+    | R_CHAR {$$= new nodo("Tipo","Char",this._$.first_line,@1.last_column);}
+    | R_STRING {$$= new nodo("Tipo","String",this._$.first_line,@1.last_column);}
 ;
 
 //POSIBLES VALORES PARA LOS TIPOS
@@ -209,6 +209,8 @@ expresion
     | DECIMAL {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("decimal",$1,this._$.first_line,@1.last_column));}
     | R_TRUE {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("true",$1,this._$.first_line,@1.last_column));}
     | R_FALSE {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("false",$1,this._$.first_line,@1.last_column));}
+    | IDENTIFICADOR {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column));}
+    | CARACTER {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("caracter",$1,this._$.first_line,@1.last_column));}
     | CADENA {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);
     var cad= $1.substr(0,$1.length);
     cad=cad.replace(/\\n/g,"\n");
@@ -218,8 +220,6 @@ expresion
     cad=cad.replace(/\\\"/g,"\"");
     cad=cad.replace(/\\\'/g,"\'");
     $$.addHijos(new nodo("cadena",cad,this._$.first_line,@1.last_column));}
-    | CARACTER {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("caracter",$1,this._$.first_line,@1.last_column));}
-    | IDENTIFICADOR {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column));}
     //PA ABAJO OTRAS COMBINACIONES
     | acs_vectores {$$=$1}
     | casteo {$$=$1}
