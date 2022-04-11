@@ -10,6 +10,8 @@ class error{
 }
 
 var ListaErrores = (function(){
+    var instancia;
+
     class Lista{
         constructor(){
             this.inicial=null;
@@ -29,6 +31,19 @@ var ListaErrores = (function(){
     
         getError(){
     
+        }
+
+        getErrores(){
+            var texto="";
+            var muestra=this.inicial;
+            while(muestra!=null){
+                texto+="ERROR: Tipo:"+muestra.tipo
+                +" Descripcion: "+muestra.descripcion
+                +" Fila: "+muestra.fila
+                +" Columna: "+muestra.columna+" \n";
+                muestra=muestra.siguiente;
+            }
+            return texto;
         }
     
         borrarErrores(){
@@ -50,3 +65,5 @@ var ListaErrores = (function(){
         }
     }
 }());
+
+module.exports={ error,ListaErrores };

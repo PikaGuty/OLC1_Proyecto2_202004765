@@ -9,4 +9,5 @@ fs.readFile('./entrada.txt', (err, data) => {
     resultado=parser.parse(data.toString());
     console.log(AST.imprimir(resultado));
     semantico.interpretar(resultado)
+    semantico.tabla();
 });

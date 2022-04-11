@@ -1,4 +1,7 @@
-var Tsimbolos = require("../tabla_simbolos");
+
+var aritmetica = require("./OpAritmeticas")
+var tabsim = require("../tabla_simbolos")
+var errores = require("../Errores")
 
 module.exports = {
 
@@ -23,6 +26,13 @@ module.exports = {
                 return codigo;
         }
         return codigo;
+    },
+
+    tabla: function(){
+        console.log("\nTabla de simbolos")
+        console.log(tabsim.tabla.getInstancia().getsimbolos());
+        console.log("Tabla de errores\n")
+        console.log(errores.ListaErrores.getInstance().getErrores())
     }
 }
 
@@ -37,95 +47,121 @@ function variable(tipo,raiz){
             //(nombre,tipo1,tipo2,valor,linea,columna)
             switch(tipo){
                 case "Int":
-                    sim= new simbolo(raiz.valor,"variable",tipo,0,raiz.fila,raiz.columna)
+                    sim= new simbolo(raiz.valor,"Declaracion",tipo,0,raiz.fila,raiz.columna)
                     break;
                 case "Double":
-                    sim= new simbolo(raiz.valor,"variable",tipo,0.0,raiz.fila,raiz.columna)
+                    sim= new simbolo(raiz.valor,"Declaracion",tipo,0.0,raiz.fila,raiz.columna)
                     break;
                 case "Boolean":
-                    sim= new simbolo(raiz.valor,"variable",tipo,true,raiz.fila,raiz.columna)
+                    sim= new simbolo(raiz.valor,"Declaracion",tipo,true,raiz.fila,raiz.columna)
                     break;
                 case "Char":
-                    sim= new simbolo(raiz.valor,"variable",tipo,'0',raiz.fila,raiz.columna)
+                    sim= new simbolo(raiz.valor,"Declaracion",tipo,'0',raiz.fila,raiz.columna)
                     break;
                 case "String":
-                    sim= new simbolo(raiz.valor,"variable",tipo,"",raiz.fila,raiz.columna)
+                    sim= new simbolo(raiz.valor,"Declaracion",tipo,"\"\"",raiz.fila,raiz.columna)
                     break;
             }
-            tabla.getInstancia().pushSimbolo(sim)
+            tabsim.tabla.getInstancia().pushSimbolo(sim)
             break;
         case "Asig":
-            switch(tipo){
-                case "Int":
-                    valo=parseInt(raiz.hijos[1].hijos[0].valor)
-                    console.log(tipo+" "+typeof(valo)+" "+valo)
-
-                    if(!isNaN(valo)){
-                        sim = new simbolo(raiz.hijos[0].valor,"variable",tipo,valo,raiz.fila,raiz.columna)
-                        console.log("Se asignó")
-                    }else{
-                        console.log("Error semantico")
-                    }
-                    break;
-                case "Double":
-                    valo=parseFloat(raiz.hijos[1].hijos[0].valor)
-                    console.log(tipo+" "+typeof(valo)+" "+valo)
-
-                    if(!isNaN(valo)){
-                        sim = new simbolo(raiz.hijos[0].valor,"variable",tipo,valo,raiz.fila,raiz.columna)
-                        console.log("Se asignó")
-                    }else{
-                        console.log("Error semantico")
-                    }
-                    break;
-                case "Boolean":
-                    valo=raiz.hijos[1].hijos[0].valor.toLowerCase() 
-                    console.log(tipo+" "+typeof(valo)+" "+valo)
-
-                    if(valo=="true"||valo=="false"){
-                        sim = new simbolo(raiz.hijos[0].valor,"variable",tipo,raiz.hijos[1].hijos[0].valor,raiz.fila,raiz.columna)
-                        console.log("Se asignó")
-                    }else{
-                        console.log("Error semantico")
-                    }
-                    break;
-                case "Char":
-                    valo=raiz.hijos[1].hijos[0].valor
-                    console.log(tipo+" "+typeof(valo)+" "+valo)
-                    valo = valo.split("")
-                    
-                    if(valo[0]=="'"&&valo[valo.length-1]=="'"){
-                        let rest=""
-                        for (let i = 1; i < valo.length-1; i++) {
-                            rest+=valo[i];
-                        }
-                        console.log(rest)
-                        sim = new simbolo(raiz.hijos[0].valor,"variable",tipo,rest,raiz.fila,raiz.columna)
-                        console.log("Se asignó")
-                    }else{
-                        console.log("Error semantico")
-                    }
-                    break;
-                case "String":
-                    valo=raiz.hijos[1].hijos[0].valor
-                    console.log(tipo+" "+typeof(valo)+" "+valo)
-                    valo = valo.split("")
-                    
-                    if(valo[0]=="\""&&valo[valo.length-1]=="\""){
-                        let rest=""
-                        for (let i = 1; i < valo.length-1; i++) {
-                            rest+=valo[i];
-                        }
-                        console.log(rest)
-                        sim = new simbolo(raiz.hijos[0].valor,"variable",tipo,rest,raiz.fila,raiz.columna)
-                        console.log("Se asignó")
-                    }else{
-                        console.log("Error semantico")
-                    }
-                    break;
+            res=evaluarExpresion(raiz.hijos[1]);
+            if (tipo==res.tipo){
+                sim = new simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
+            }else if(tipo=="Double"&&res.tipo=="Int"){
+                sim = new simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
+            }else{
+                console.log("Error semantico, el dato "+res.valor+" no es de tipo "+tipo)
             }
-            tabla.getInstancia().pushSimbolo(sim)
+            if(sim!=null){
+                tabsim.tabla.getInstancia().pushSimbolo(sim)
+            }
+            
             break
+    }
+}
+
+function evaluarExpresion(raiz){
+    let res1 = null;
+    let res2 = null;
+    let res = null;
+    
+    switch (raiz.etiqueta) {
+        case "Expresion":
+            if (raiz.hijos.length==3) {
+                console.log("ENcontre 3")
+                res1 = evaluarExpresion(raiz.hijos[0]);
+                res2 = evaluarExpresion(raiz.hijos[2]);
+
+                let operador = raiz.hijos[1].valor;
+                console.log("El operador es "+operador)
+                switch(operador){
+                    //OPERACIONES ARITMETICAS
+                    case "^":
+                    case "+":
+                        return aritmetica.suma(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
+                    case "-": 
+                    case "*":
+                    case "/":
+                    case "%": 
+                    //OPERACIONES LOGICAS
+                    case "==":
+                    case "!=":
+                    case ">=":
+                    case "<=":
+                    case ">":
+                    case "<":
+                    case "||":
+                    case "&&":
+                    default:
+                        break;
+                }
+            }else if (raiz.hijos.length==2) {
+                console.log("Tengo 2 hijos")
+            }else if (raiz.hijos.length==1) {
+                return evaluarExpresion(raiz.hijos[0]);
+            }
+        case "entero":
+            res = new ResultadoOp();
+            res.tipo="Int";
+            res.valor=raiz.valor;
+            return res;
+        case "decimal":
+            res = new ResultadoOp();
+            res.tipo="Double"
+            res.valor=raiz.valor;
+            return res;
+        case "true":
+            res = new ResultadoOp();
+            res.tipo="Boolean"
+            res.valor=raiz.valor;
+            return res;
+        case "false":
+            res = new ResultadoOp();
+            res.tipo="Boolean"
+            res.valor=raiz.valor;
+            return res;
+        case "id":
+            res = new ResultadoOp();
+            //AQUI FUMARME ALGO DESPUES
+            return res;
+        case "caracter":
+            res = new ResultadoOp();
+            res.tipo="Char"
+            res.valor=raiz.valor;
+            return res;
+        case "cadena":
+            res = new ResultadoOp();
+            res.tipo="String"
+            res.valor=raiz.valor;
+            return res;
+    }
+}
+
+class ResultadoOp{
+    constructor(tipo,valor){
+        this.tipo=tipo;
+        this.valor=valor;
     }
 }
 
@@ -140,52 +176,3 @@ class simbolo {
     }
 }
 
-var tabla = (function(){
-    var instancia;
-
-    class tabla{
-        constructor(){
-            this.simbolos=[];
-        }
-
-        pushSimbolo(simbolos){
-            this.simbolos.push(simbolos);
-        }
-
-        borrarTabla(){
-            this.simbolos=[];
-        }
-
-        getSimbolo(nombre){
-            let res=null;
-            this.simbolos.forEach(simbolo=>{
-                if(simbolo.nombre==nombre){
-                    res=simbolo;
-                }
-            })
-            return res;
-        }
-
-        modificarSimbolo(simb){
-            this.simbolos.forEach(simbolo=>{
-                if(simb.nombre==simbolo.nombre){
-                    simbolo.valor=simb.valor;
-                    simbolo.tipo=simb.tipo;
-                }
-            })
-        }
-    }
-
-    function CrearInstancia(){
-        return new tabla();
-    }
-
-    return {
-        getInstancia:function(){
-            if(!instancia){
-                instancia=CrearInstancia();
-            }
-            return instancia;
-        }
-    }
-}());

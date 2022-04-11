@@ -4,7 +4,14 @@
             comentario multilinea 
 alv*/
 
-string entero = 'a', entero2, entero3="a2",a='aas';
+//string entero = 'a', entero2, entero3="a2";
+double a = 2.2+4+3.5;
+double b = false+4.2;
+int a = false+true;
+int a = false+false;
+int a = false+'e';
+string a = false+"yo soy elmo";
+
 /*double decimal2, decimal = 2.3;
 char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';
 boolean bo = true, bo2 = false, bod;

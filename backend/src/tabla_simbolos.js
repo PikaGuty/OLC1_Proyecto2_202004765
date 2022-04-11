@@ -35,6 +35,26 @@ var tabla = (function(){
             return res;
         }
 
+        getsimbolos(){
+            var texto="\n";
+
+            var cuenta=1;
+            this.simbolos.forEach(simbolo =>{
+                try{
+                    texto+=" -- "+cuenta
+                    texto+=" -- "+simbolo.nombre
+                    texto+=" -- "+simbolo.tipo1
+                    texto+=" -- "+simbolo.tipo2
+                    texto+=" -- "+simbolo.valor+"\n";
+                    cuenta++;
+                }catch(e){
+
+                }
+                
+            })
+             return texto;
+        } 
+
         modificarSimbolo(simb){
             this.simbolos.forEach(simbolo=>{
                 if(simb.nombre==simbolo.nombre){
@@ -58,4 +78,6 @@ var tabla = (function(){
         }
     }
 }());
+
+module.exports={tabla,simbolo}
 

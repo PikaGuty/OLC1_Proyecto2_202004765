@@ -187,6 +187,7 @@ tipo
 
 //POSIBLES VALORES PARA LOS TIPOS
 expresion
+    //Expresiones 
     : expresion POTENCIA expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op",$2,this._$.first_line,@2.last_column),$3);}
     | expresion MAS expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op",$2,this._$.first_line,@2.last_column),$3);}
     | expresion MENOS expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op",$2,this._$.first_line,@2.last_column),$3);}
@@ -204,7 +205,7 @@ expresion
     | expresion MAYORQ expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op_rel",$2,this._$.first_line,@2.last_column),$3);}
     | expresion OR expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op_log",$2,this._$.first_line,@2.last_column),$3);}
     | expresion AND expresion {$$= new nodo("Expresion","Expresion",this._$.first_line,@2.last_column);$$.addHijos($1,new nodo("op_log",$2,this._$.first_line,@2.last_column),$3);}
-    //PA ABAJO DATOS EN SI
+    //PA ABAJO TIPOS DE DATOS EN SI
     | ENTERO {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("entero",$1,this._$.first_line,@1.last_column));}
     | DECIMAL {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("decimal",$1,this._$.first_line,@1.last_column));}
     | R_TRUE {$$= new nodo("Expresion","Expresion",this._$.first_line,@1.last_column);$$.addHijos(new nodo("true",$1,this._$.first_line,@1.last_column));}
