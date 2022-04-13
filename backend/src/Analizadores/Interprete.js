@@ -1,5 +1,7 @@
 
 var aritmetica = require("./OpAritmeticas")
+var relacionales = require("./OpRelacionales")
+var logicos = require("./OpLogicos")
 var tabsim = require("../tabla_simbolos")
 var errores = require("../Errores")
 
@@ -89,7 +91,7 @@ function evaluarExpresion(raiz){
     switch (raiz.etiqueta) {
         case "Expresion":
             if (raiz.hijos.length==3) {
-                console.log("ENcontre 3")
+                console.log("Encontre 3")
                 res1 = evaluarExpresion(raiz.hijos[0]);
                 res2 = evaluarExpresion(raiz.hijos[2]);
 
@@ -98,26 +100,51 @@ function evaluarExpresion(raiz){
                 switch(operador){
                     //OPERACIONES ARITMETICAS
                     case "^":
+                        return aritmetica.Potencia(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "+":
                         return aritmetica.suma(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "-": 
+                        return aritmetica.resta(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "*":
+                        return aritmetica.multiplicacion(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "/":
+                        return aritmetica.division(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "%": 
+                        return aritmetica.modular(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     //OPERACIONES LOGICAS
                     case "==":
+                        return relacionales.igualacion(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "!=":
+                        return relacionales.diferenciacion(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case ">=":
+                        return relacionales.mayique(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "<=":
+                        return relacionales.menique(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case ">":
+                        return relacionales.mayque(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "<":
+                        return relacionales.menque(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "||":
+                        return logicos.oplor(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     case "&&":
+                        return logicos.opand(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     default:
                         break;
                 }
             }else if (raiz.hijos.length==2) {
-                console.log("Tengo 2 hijos")
+                console.log("Encontre 2")
+                res1 = evaluarExpresion(raiz.hijos[1]);
+
+                let operador = raiz.hijos[0].valor;
+                console.log("El operador es "+operador)
+                switch(operador){
+                    case "-":
+                        return aritmetica.negacion(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                    case "!":
+                        return logicos.neg(res1,res2,raiz.hijos[1].fila,raiz.hijos[1].columna)
+                    default:
+                        break;
+                }
             }else if (raiz.hijos.length==1) {
                 return evaluarExpresion(raiz.hijos[0]);
             }
@@ -155,6 +182,15 @@ function evaluarExpresion(raiz){
             res.tipo="String"
             res.valor=raiz.valor;
             return res;
+        case "FPrint":
+        case "FPrintln":
+        case "FToLower":
+        case "FToUpper":
+        case "FRound":
+        case "FLength":
+        case "FTypeOf":
+        case "FToString":
+        case "FToCharArray":
     }
 }
 

@@ -69,14 +69,7 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 "]"					        return 'CORDER';
 ","					        return 'COMA';
 
-//********** OPERANDOS **********
-"+"					        return 'MAS';
-"-"					        return 'MENOS';
-"*"					        return 'POR';
-"/"					        return 'DIV';
-"^"					        return 'POTENCIA';
-"%"					        return 'MODULO';
-"="					        return 'IGUAL';
+
 
 //********** Operadores Relacionales **********
 "=="					    return 'IGUALACION';
@@ -88,6 +81,15 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 "!"					        return 'DIF';
 "||"					    return 'OR';
 "&&"					    return 'AND';
+
+//********** OPERANDOS **********
+"+"					        return 'MAS';
+"-"					        return 'MENOS';
+"*"					        return 'POR';
+"/"					        return 'DIV';
+"^"					        return 'POTENCIA';
+"%"					        return 'MODULO';
+"="					        return 'IGUAL';
 
 
 //********** Expresiones **********
