@@ -2,6 +2,7 @@
 var aritmetica = require("./OpAritmeticas")
 var relacionales = require("./OpRelacionales")
 var logicos = require("./OpLogicos")
+var fntiva = require("./FNativas")
 var tabsim = require("../tabla_simbolos")
 var errores = require("../Errores")
 
@@ -24,7 +25,35 @@ module.exports = {
                 return codigo;
             case "Var":
                 let t = raiz.hijos[0];
-                raiz.hijos.forEach(hijo=> codigo+=variable(t.valor,hijo))
+                raiz.hijos.forEach(hijo=> variable(t.valor,hijo))
+                return codigo;
+            case "FPrint":
+                res = evaluarExpresion(raiz.hijos[0]);
+                if(res.tipo=="String"){
+                    cad=res.valor.toString().split("");
+                    cadr ="";
+                    for (let i = 1; i < cad.length-1; i++) {
+                        cadr += cad[i];
+                    }
+                    codigo+=cadr
+                }else{
+                    codigo+=res.valor
+                }
+                
+                return codigo;
+            case "FPrintln":
+                res = evaluarExpresion(raiz.hijos[0]);
+                if(res.tipo=="String"){
+                    cad=res.valor.toString().split("");
+                    cadr ="";
+                    for (let i = 1; i < cad.length-1; i++) {
+                        cadr += cad[i];
+                    }
+                    codigo+=cadr+"\n"
+                }else{
+                    codigo+=res.valor+"\n"
+                }
+                
                 return codigo;
         }
         return codigo;
@@ -91,12 +120,10 @@ function evaluarExpresion(raiz){
     switch (raiz.etiqueta) {
         case "Expresion":
             if (raiz.hijos.length==3) {
-                console.log("Encontre 3")
                 res1 = evaluarExpresion(raiz.hijos[0]);
                 res2 = evaluarExpresion(raiz.hijos[2]);
 
                 let operador = raiz.hijos[1].valor;
-                console.log("El operador es "+operador)
                 switch(operador){
                     //OPERACIONES ARITMETICAS
                     case "^":
@@ -132,11 +159,9 @@ function evaluarExpresion(raiz){
                         break;
                 }
             }else if (raiz.hijos.length==2) {
-                console.log("Encontre 2")
                 res1 = evaluarExpresion(raiz.hijos[1]);
 
                 let operador = raiz.hijos[0].valor;
-                console.log("El operador es "+operador)
                 switch(operador){
                     case "-":
                         return aritmetica.negacion(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
@@ -182,15 +207,28 @@ function evaluarExpresion(raiz){
             res.tipo="String"
             res.valor=raiz.valor;
             return res;
-        case "FPrint":
-        case "FPrintln":
         case "FToLower":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.tLower(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FToUpper":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.tUpper(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FRound":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.round(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FLength":
+            //FALTAN LISTAS Y VECTORES
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.Flength(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FTypeOf":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.typof(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FToString":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.tstring(res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
         case "FToCharArray":
+            //FALTAN LISTAS Y VECTORES
+
     }
 }
 

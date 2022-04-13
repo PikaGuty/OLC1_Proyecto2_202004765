@@ -6,7 +6,12 @@ alv*/
 
 //string entero = 'a', entero2, entero3="a2";
 
-String a = typeof("Hola");
+String a = toString(2.51);
+
+String a = toString(true);
+String a = toString(2);
+
+String a = toString('s');
 
 
 /*double decimal2, decimal = 2.3;

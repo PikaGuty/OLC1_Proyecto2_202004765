@@ -8,6 +8,8 @@ fs.readFile('./entrada.txt', (err, data) => {
     if (err) throw err;
     resultado=parser.parse(data.toString());
     console.log(AST.imprimir(resultado));
-    semantico.interpretar(resultado)
+    let codigo = semantico.interpretar(resultado)
     semantico.tabla();
+    console.log("\nSALIDA\n")
+    console.log(codigo)
 });

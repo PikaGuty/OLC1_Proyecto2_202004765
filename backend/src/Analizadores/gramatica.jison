@@ -379,7 +379,7 @@ ftoupper
 ;
 //************************* ROUND ************************
 fround
-    : R_ROUND PARIZQ DECIMAL PARDER {$$= new nodo("FRound","FRound"); $$.addHijos($3)}
+    : R_ROUND PARIZQ expresion PARDER {$$= new nodo("FRound","FRound"); $$.addHijos($3)}
 ;
 //************************* LENGTH ************************
 flength
