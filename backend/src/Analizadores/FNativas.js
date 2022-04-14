@@ -106,6 +106,108 @@ module.exports = {
                 res.valor="error";
                 return res;
         }
+    },
+
+    cast: function(tipo,v1,fila,columna){
+        let res = new ResultadoOp();
+        switch(tipo){
+            case "Int":
+                switch(v1.tipo){
+                    case "Double":
+                        res.tipo="Int";
+                        res.valor=parseInt(v1.valor);
+                        return res;
+                    case "Char":
+                        res.tipo="Int";
+                        cad=v1.valor.toString().split("");
+                        cadr ="";
+                        for (let i = 1; i < cad.length-1; i++) {
+                            cadr += cad[i];
+                        }
+                        cadr=cadr.replace(/\\n/g,"\n");
+                        cadr=cadr.replace(/\\t/g,"\t");
+                        cadr=cadr.replace(/\\r/g,"\r");
+                        cadr=cadr.replace(/\\\\/g,"\\");
+                        cadr=cadr.replace(/\\\"/g,"\"");
+                        cadr=cadr.replace(/\\\'/g,"\'");
+                        res.valor=cadr.toString().charCodeAt()
+                        return res;
+                    default:
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No es posible castear del tipo "+v1.tipo+" al tipo "+tipo,fila,columna));
+                        res.tipo="error";
+                        res.valor="error";
+                        return res;
+                }
+            case "Double":
+                switch(v1.tipo){
+                    case "Int":
+                        res.tipo="Double";
+                        res.valor=parseFloat(v1.valor+".0");
+                        return res;
+                    case "Char":
+                        res.tipo="Double";
+                        cad=v1.valor.toString().split("");
+                        cadr ="";
+                        for (let i = 1; i < cad.length-1; i++) {
+                            cadr += cad[i];
+                        }
+                        cadr=cadr.replace(/\\n/g,"\n");
+                        cadr=cadr.replace(/\\t/g,"\t");
+                        cadr=cadr.replace(/\\r/g,"\r");
+                        cadr=cadr.replace(/\\\\/g,"\\");
+                        cadr=cadr.replace(/\\\"/g,"\"");
+                        cadr=cadr.replace(/\\\'/g,"\'");
+                        res.valor=parseFloat(cadr.toString().charCodeAt()+".0")
+                        return res;
+                    default:
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No es posible castear del tipo "+v1.tipo+" al tipo "+tipo,fila,columna));
+                        res.tipo="error";
+                        res.valor="error";
+                        return res;
+                }
+            case "String":
+                switch(v1.tipo){
+                    case "Int":
+                    case "Double":
+                        res.tipo="String";
+                        res.valor="\""+v1.valor+"\""
+                        return res;
+                    default:
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No es posible castear del tipo "+v1.tipo+" al tipo "+tipo,fila,columna));
+                        res.tipo="error";
+                        res.valor="error";
+                        return res;
+                }
+            case "Char":
+                switch(v1.tipo){
+                    case "Int":
+                        res.tipo="Char";
+                        cadr = String.fromCharCode(parseInt(v1.valor))
+                        cadr=cadr.replace("\n","\\n");
+                        cadr=cadr.replace("\t","\\t");
+                        cadr=cadr.replace("\r","\\r");
+                        cadr=cadr.replace("\\","\\\\");
+                        cadr=cadr.replace("\"","\\\"");
+                        cadr=cadr.replace("\'","\\\'");
+                        if(cadr.includes("\\n")||cadr.includes("\\t")||cadr.includes("\\r")){
+                            cad=cadr.split("")
+                            res.valor="\'"+cad[1]+cad[2]+"\'"
+                            return res;
+                        }
+                        res.valor="\'"+cadr+"\'"
+                        return res;
+                    default:
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No es posible castear del tipo "+v1.tipo+" al tipo "+tipo,fila,columna));
+                        res.tipo="error";
+                        res.valor="error";
+                        return res;
+                }
+            default:
+                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No es posible castear del tipo "+v1.tipo+" al tipo "+tipo,fila,columna));
+                res.tipo="error";
+                res.valor="error";
+                return res;
+        }
     }
 }
 

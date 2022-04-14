@@ -6,12 +6,11 @@ alv*/
 
 //string entero = 'a', entero2, entero3="a2";
 
-String a = toString(2.51);
+int a = 2.2, a,b=t;
+e=23;
+a=r;
 
-String a = toString(true);
-String a = toString(2);
-
-String a = toString('s');
+a=9212122121.2;
 
 
 /*double decimal2, decimal = 2.3;
