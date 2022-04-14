@@ -1,4 +1,5 @@
 var errores = require("../Errores")
+var tabsim = require("../tabla_simbolos")
 
 module.exports = {
     tLower: function(v1,fila,columna){
@@ -208,6 +209,75 @@ module.exports = {
                 res.valor="error";
                 return res;
         }
+    },
+
+    incr: function(nom,v1,fila,columna){
+        if(v1.tipo=="Int"){
+            res.tipo="Int";
+            res.valor=v1.valor
+            fincr(nom,fila,columna)
+            return res;
+        }else if(v1=="Double"){
+            res.tipo="Double";
+            res.valor=v1.valor
+            fincr(nom,fila,columna)
+            return res;
+        }
+        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
+        res.tipo="error";
+        res.valor="error";
+        return res;        
+    },
+    decr: function(nom,v1,fila,columna){
+        if(v1.tipo=="Int"){
+            res.tipo="Int";
+            res.valor=v1.valor
+            fdecr(nom,fila,columna)
+            return res;
+        }else if(v1=="Double"){
+            res.tipo="Double";
+            res.valor=v1.valor
+            fdecr(nom,fila,columna)
+            return res;
+        }
+        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede decrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
+        res.tipo="error";
+        res.valor="error";
+        return res;        
+    }
+}
+
+function fincr(nom,fila,columna){
+    simbolo = tabsim.tabla.getInstancia().getSimbolo(nom);
+    if(simbolo!=null){
+        let tipo = simbolo.tipo2;
+        if(tipo=="Double"||tipo=="Int"){
+            sim = new tabsim.simbolo(nom,"Incremento",tipo,parseInt(simbolo.valor)+1,fila,columna)
+        }else{
+            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
+        }
+        if(sim!=null){
+            tabsim.tabla.getInstancia().modificarSimbolo(sim)
+        }
+    }else{
+        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+nom+"\"",fila,columna));
+    }
+}
+
+function fdecr(nom,fila,columna){
+    simbolo = tabsim.tabla.getInstancia().getSimbolo(nom);
+    if(simbolo!=null){
+        let tipo = simbolo.tipo2;
+        if(tipo=="Double"||tipo=="Int"){
+            sim = new tabsim.simbolo(nom,"Decremento",tipo,parseInt(simbolo.valor)-1,fila,columna)
+        }else{
+            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
+        }
+        if(sim!=null){
+            tabsim.tabla.getInstancia().modificarSimbolo(sim)
+        }
+    }else{
+        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+nom+"\"",fila,columna));
     }
 }
 

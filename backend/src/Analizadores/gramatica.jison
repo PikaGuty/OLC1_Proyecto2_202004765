@@ -83,6 +83,9 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 "&&"					    return 'AND';
 
 //********** OPERANDOS **********
+"?"					        return 'INTERROG';
+"++"					    return 'INCRE';
+"--"					    return 'DECRE';
 "+"					        return 'MAS';
 "-"					        return 'MENOS';
 "*"					        return 'POR';
@@ -131,6 +134,7 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 %}
 
 //PRECEDENCIA
+%left 'INTERROG' 'DOSPTS'
 %left 'OR'
 %left 'AND'
 %right 'DIF'
@@ -138,8 +142,9 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 %left 'MAS' 'MENOS'
 %left 'DIV' 'POR' 'MODULO'
 %nonassoc 'POTENCIA'
-%right 'MENOS' UMINUS
+%right UMINUS
 %left 'PARIZQ' 'PARDER'
+%right 'INCRE' 'DECRE'
 
 %start ini
 
@@ -234,6 +239,8 @@ expresion
     | ftostring {$$=$1}
     | ftochararray {$$=$1}
     | llamada {$$=$1}
+    | inc_dec {$$=$1}
+    | terna {$$=$1}
 ;
 //LISTA DE VALORES
 lista 
@@ -265,8 +272,8 @@ casteo
 ;
 //************************ INCREMENTO Y DECREMENTO ************************
 inc_dec
-    : expresion MAS MAS {$$= new nodo("Incr","Incr"); $$.addHijos($1)}
-    | expresion MENOS MENOS {$$= new nodo("Decr","Decr"); $$.addHijos($1)}
+    : expresion INCRE {$$= new nodo("Incr","Incr"); $$.addHijos($1)}
+    | expresion DECRE {$$= new nodo("Decr","Decr"); $$.addHijos($1)}
 ;
 
 //******************************** VECTORES *******************************
@@ -291,6 +298,10 @@ acs_vectores
 mod_vectores
     : IDENTIFICADOR CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec1","modVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
     | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec2","modVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$9)}
+;
+//************************* OPERADOR TERNARIO ************************
+terna
+    : expresion INTERROG expresion DOSPTS expresion {$$= new nodo("Terna","Terna"); $$.addHijos($1,$3,$5)}
 ;
 //************************* SENTENCIA DE CONTRO IF ************************
 sen_if

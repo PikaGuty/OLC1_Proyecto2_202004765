@@ -6,12 +6,13 @@ alv*/
 
 //string entero = 'a', entero2, entero3="a2";
 
-int a = 2.2, a,b=t;
-e=23;
-a=r;
+int a=4;
+string g="hola";
+int b = (1+a--)*3;
+int c = a--;
+a--;
 
-a=9212122121.2;
-
+//boolean a = 5>2 ? true : false;
 
 /*double decimal2, decimal = 2.3;
 char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';

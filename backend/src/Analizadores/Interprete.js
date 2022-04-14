@@ -14,6 +14,7 @@ module.exports = {
         let res;
         let codigo=""
         let sim;
+        let simbolo;
         if(raiz===undefined || raiz===null)return;
 
         switch(raiz.etiqueta){
@@ -29,8 +30,7 @@ module.exports = {
                 return codigo;
             case "Asig":
                 res=evaluarExpresion(raiz.hijos[1]);
-                //sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
-                let simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+                simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
                 if(simbolo!=null){
                     let tipo = simbolo.tipo2;
                     if (tipo==res.tipo){
@@ -45,7 +45,7 @@ module.exports = {
                         }
                         
                     }else if(tipo=="Double"&&res.tipo=="Int"){
-                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,1,raiz.fila,raiz.columna)
+                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
                     }else if(tipo=="Int"&&res.tipo=="Boolean"){
                         if(res.valor.toString().toLowerCase()=="true"){
                             sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,1,raiz.fila,raiz.columna)
@@ -64,6 +64,38 @@ module.exports = {
                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].valor+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
                 }
                 
+                break;
+            case "Incr":
+                simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].hijos[0].valor);
+                if(simbolo!=null){
+                    let tipo = simbolo.tipo2;
+                    if(tipo=="Double"||tipo=="Int"){
+                        sim = new tabsim.simbolo(raiz.hijos[0].hijos[0].valor,"Incremento",tipo,parseInt(simbolo.valor)+1,raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna)
+                    }else{
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+raiz.hijos[0].hijos[0].valor+"\" por que no es de tipo numérico",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
+                    }
+                    if(sim!=null){
+                        tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                    }
+                }else{
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].hijos[0].valor+"\"",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
+                }
+                break;
+            case "Decr":
+                simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].hijos[0].valor);
+                if(simbolo!=null){
+                    let tipo = simbolo.tipo2;
+                    if(tipo=="Double"||tipo=="Int"){
+                        sim = new tabsim.simbolo(raiz.hijos[0].hijos[0].valor,"Decremento",tipo,parseInt(simbolo.valor)-1,raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna)
+                    }else{
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede decrementar la variable: \""+raiz.hijos[0].hijos[0].valor+"\" por que no es de tipo numérico",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
+                    }
+                    if(sim!=null){
+                        tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                    }
+                }else{
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].hijos[0].valor+"\"",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
+                }
                 break;
             case "FPrint":
                 res = evaluarExpresion(raiz.hijos[0]);
@@ -147,6 +179,7 @@ function variable(tipo,raiz){
             break;
         case "Asig":
             res=evaluarExpresion(raiz.hijos[1]);
+            
             if (tipo==res.tipo){
                 if(tipo=="Int"){
                     if(-2147483648 <= res.valor && res.valor <= 2147483647){
@@ -159,7 +192,7 @@ function variable(tipo,raiz){
                 }
                 
             }else if(tipo=="Double"&&res.tipo=="Int"){
-                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,1,raiz.fila,raiz.columna)
+                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
             }else if(tipo=="Int"&&res.tipo=="Boolean"){
                 if(res.valor.toString().toLowerCase()=="true"){
                     sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,1,raiz.fila,raiz.columna)
@@ -184,6 +217,7 @@ function variable(tipo,raiz){
                 
             }
             break;
+        
     }
 }
 
@@ -314,6 +348,12 @@ function evaluarExpresion(raiz){
             tipo = raiz.hijos[0].valor
             res1 = evaluarExpresion(raiz.hijos[1]);
             return fntiva.cast(tipo,res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+        case "Incr":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.incr(raiz.hijos[0].hijos[0].valor,res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+        case "Decr":
+            res1 = evaluarExpresion(raiz.hijos[0]);
+            return fntiva.decr(raiz.hijos[0].hijos[0].valor,res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
 
     }
 }
@@ -325,14 +365,4 @@ class ResultadoOp{
     }
 }
 
-class simbolo {
-    constructor(nombre,tipo1,tipo2,valor,linea,columna){
-        this.nombre = nombre;
-        this.tipo1 = tipo1;
-        this.tipo2 = tipo2;
-        this.valor = valor;
-        this.linea = linea;
-        this.columna =  columna;
-    }
-}
 

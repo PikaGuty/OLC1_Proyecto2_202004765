@@ -58,8 +58,12 @@ var tabla = (function(){
         modificarSimbolo(simb){
             this.simbolos.forEach(simbolo=>{
                 if(simb.nombre==simbolo.nombre){
-                    simbolo.valor=simb.valor;
-                    simbolo.tipo=simb.tipo;
+                    simbolo.nombre = simb.nombre;
+                    simbolo.tipo1 = simb.tipo1;
+                    simbolo.tipo2 = simb.tipo2;
+                    simbolo.valor = simb.valor;
+                    simbolo.linea = simb.linea;
+                    simbolo.columna =  simb.columna;
                 }
             })
         }
