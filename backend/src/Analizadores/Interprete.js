@@ -2,6 +2,7 @@
 var aritmetica = require("./OpAritmeticas")
 var relacionales = require("./OpRelacionales")
 var logicos = require("./OpLogicos")
+var lista = require("./lista")
 var fntiva = require("./FNativas")
 var tabsim = require("../tabla_simbolos")
 var errores = require("../Errores")
@@ -15,6 +16,7 @@ module.exports = {
         let codigo=""
         let sim;
         let simbolo;
+        let vector1, vector2;
         if(raiz===undefined || raiz===null)return;
 
         switch(raiz.etiqueta){
@@ -125,6 +127,156 @@ module.exports = {
                 }
                 
                 return codigo;
+            case "DecVec1":
+                vector1=null;
+                if(raiz.hijos[0].valor==raiz.hijos[2].valor){
+                    res=evaluarExpresion(raiz.hijos[3]);
+                    if(res.tipo=="Int"){
+                        vector1 = new lista.listaVec(raiz.hijos[2].valor,parseInt(res.valor))
+                        simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[2].valor,vector1.reg(),raiz.fila,raiz.columna)
+                        if(simbolo!=null){
+                            if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                            }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                            }
+                        }else{
+                            tabsim.tabla.getInstancia().pushSimbolo(sim)
+                        }
+                    }else{
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La dimensión del vector debe ser de tipo Entera",raiz.hijos[3].fila,raiz.hijos[3].columna));
+                    }
+                    
+                }else if(raiz.hijos[2].valor=="ListVec1"){
+                    tipo = raiz.hijos[0].valor;
+                    vector1 = new lista.listaVec(tipo,raiz.hijos[2].hijos.length)
+                    let permitido = true;
+                    for (let i = 0; i < raiz.hijos[2].hijos.length; i++) {
+                        res=evaluarExpresion(raiz.hijos[2].hijos[i]);
+
+                        if (tipo==res.tipo){
+                            if(tipo=="Int"){
+                                if(-2147483648 <= res.valor && res.valor <= 2147483647){
+                                    vector1.insertar(res.valor,i,raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna);
+                                }else{
+                                    permitido=false;
+                                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna));
+                                }
+                            }else{
+                                vector1.insertar(res.valor,i,raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna);
+                            }
+                            
+                        }else if(tipo=="Double"&&res.tipo=="Int"){
+                            sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
+                        }else if(tipo=="Int"&&res.tipo=="Boolean"){
+                            if(res.valor.toString().toLowerCase()=="true"){
+                                vector1.insertar(1,i,raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna);
+                            }else{
+                                vector1.insertar(0,i,raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna);
+                            }
+                            
+                        }else{
+                            permitido=false;
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Error semantico, el dato \""+res.valor+"\" no es de tipo \""+tipo+"\"",raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna));
+                        }
+
+                    }
+                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,vector1.reg(),raiz.fila,raiz.columna)
+                    if(simbolo!=null){
+                        if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                        }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                        }
+                    }else{
+                        if(permitido)
+                            tabsim.tabla.getInstancia().pushSimbolo(sim)
+                    }
+                }else{
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Esta no es una forma correcta de declarar vectores de una dimensión",raiz.hijos[2].fila,raiz.hijos[2].columna));
+                }
+                break;
+            case "DecVec2":
+                vector1=null;
+                if(raiz.hijos[0].valor==raiz.hijos[2].valor){
+                    res1=evaluarExpresion(raiz.hijos[3]);
+                    res2=evaluarExpresion(raiz.hijos[3]);
+                    if(res1.tipo=="Int"||res2.tipo=="Int"){
+                        vector1 = new lista.listaVec2(raiz.hijos[2].valor,parseInt(res1.valor),parseInt(res2.valor))
+                        simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[2].valor,vector1.reg(),raiz.fila,raiz.columna)
+                        if(simbolo!=null){
+                            if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                            }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                            }
+                        }else{
+                            tabsim.tabla.getInstancia().pushSimbolo(sim)
+                        }
+                    }else{
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La dimensión del vector debe ser de tipo Entera",raiz.hijos[3].fila,raiz.hijos[3].columna));
+                    }
+                    
+                }else if(raiz.hijos[2].valor=="ListVec2"){
+                    tipo = raiz.hijos[0].valor;
+                    let dim2=0; 
+                    for (let i = 0; i < raiz.hijos[2].hijos.length; i++) {
+                        if(raiz.hijos[2].hijos[i].hijos.length>dim2){
+                            dim2=raiz.hijos[2].hijos[i].hijos.length
+                        }
+                    }
+                    vector2 = new lista.listaVec2(tipo,raiz.hijos[2].hijos.length,dim2)
+                    let permitido = true;
+                    for (let i = 0; i < raiz.hijos[2].hijos.length; i++) {
+                        for (let j = 0; j < raiz.hijos[2].hijos[i].hijos.length; j++) {
+                            res=evaluarExpresion(raiz.hijos[2].hijos[i].hijos[j]);
+
+                            if (tipo==res.tipo){
+                                if(tipo=="Int"){
+                                    if(-2147483648 <= res.valor && res.valor <= 2147483647){
+                                        vector2.insertar(res.valor,i,j,raiz.hijos[2].hijos[i].hijos[j].fila,raiz.hijos[2].hijos[i].hijos[j].columna);
+                                    }else{
+                                        permitido=false;
+                                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna));
+                                    }
+                                }else{
+                                    vector2.insertar(res.valor,i,j,raiz.hijos[2].hijos[i].hijos[j].fila,raiz.hijos[2].hijos[i].hijos[j].columna);
+                                }
+                                
+                            }else if(tipo=="Double"&&res.tipo=="Int"){
+                                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,res.valor,raiz.fila,raiz.columna)
+                            }else if(tipo=="Int"&&res.tipo=="Boolean"){
+                                if(res.valor.toString().toLowerCase()=="true"){
+                                    vector2.insertar(1,i,j,raiz.hijos[2].hijos[i].hijos[j].fila,raiz.hijos[2].hijos[i].hijos[j].columna);
+                                }else{
+                                    vector2.insertar(0,i,j,raiz.hijos[2].hijos[i].hijos[j].fila,raiz.hijos[2].hijos[i].hijos[j].columna);
+                                }
+                                
+                            }else{
+                                permitido=false;
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Error semantico, el dato \""+res.valor+"\" no es de tipo \""+tipo+"\"",raiz.hijos[2].hijos[i].fila,raiz.hijos[2].hijos[i].columna));
+                            }
+                        }
+                    }
+                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,vector2.reg(),raiz.fila,raiz.columna)
+                    if(simbolo!=null){
+                        if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                        }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                        }
+                    }else{
+                        if(permitido)
+                            tabsim.tabla.getInstancia().pushSimbolo(sim)
+                    }
+                }else{
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Esta no es una forma correcta de declarar vectores de una dimensión",raiz.hijos[2].fila,raiz.hijos[2].columna));
+                }
+                break;
         }
         return codigo;
     },
@@ -166,7 +318,7 @@ function variable(tipo,raiz){
             if(sim!=null){
                 let simbolo = tabsim.tabla.getInstancia().getSimbolo(sim.nombre);
                 if(simbolo!=null){
-                    if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"){
+                    if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.fila,raiz.columna));
                     }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre "+sim.nombre,raiz.fila,raiz.columna));
@@ -206,7 +358,7 @@ function variable(tipo,raiz){
             if(sim!=null){
                 let simbolo = tabsim.tabla.getInstancia().getSimbolo(sim.nombre);
                 if(simbolo!=null){
-                    if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"){
+                    if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                     }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
@@ -224,6 +376,7 @@ function variable(tipo,raiz){
 function evaluarExpresion(raiz){
     let res1 = null;
     let res2 = null;
+    let res3 = null;
     let res = null;
     
     switch (raiz.etiqueta) {
@@ -354,6 +507,11 @@ function evaluarExpresion(raiz){
         case "Decr":
             res1 = evaluarExpresion(raiz.hijos[0]);
             return fntiva.decr(raiz.hijos[0].hijos[0].valor,res1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+        case "Terna":
+            res1 = evaluarExpresion(raiz.hijos[0])
+            res2 = evaluarExpresion(raiz.hijos[1])
+            res3 = evaluarExpresion(raiz.hijos[2])
+            return fntiva.terna(res1,res2,res3,raiz.hijos[0].fila,raiz.hijos[0].columna)
 
     }
 }

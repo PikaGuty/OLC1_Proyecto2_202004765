@@ -6,13 +6,13 @@ alv*/
 
 //string entero = 'a', entero2, entero3="a2";
 
-int a=4;
-string g="hola";
-int b = (1+a--)*3;
-int c = a--;
-a--;
+//int a[][]= new int[4][3];
+int b[][]= [[2,4],[6,8,3]];
+/*double b[]= new double[4];
+boolean c[]= new boolean[4];
+char d[]= new char[4];
+String e[]= new String[4];*/
 
-//boolean a = 5>2 ? true : false;
 
 /*double decimal2, decimal = 2.3;
 char caracter = 'a', caracter1, ca=entero, caracter2 = '3', caracter3 = '(', caracter4 = '\n',caracter5 = '\t',caracter6 = '\"',caracter7 = '\\', caracter8 = '\'';

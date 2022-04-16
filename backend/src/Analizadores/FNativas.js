@@ -244,6 +244,25 @@ module.exports = {
         res.tipo="error";
         res.valor="error";
         return res;        
+    },
+    terna: function(v1,v2,v3,fila,columna){
+        console.log("Condicion "+v1.valor) 
+        if(v1.tipo="Boolean"){
+            if(v1.valor.toLowerCase()=="true"){
+                res.tipo = v2.tipo;
+                res.valor = v2.valor;
+                return res;
+            }else{
+                res.tipo = v3.tipo;
+                res.valor = v3.valor;
+                return res;
+            }
+        }else{
+            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","El primer parámetro debe ser una condición (devolver un valor booleano)",fila,columna));
+            res.tipo="error";
+            res.valor="error";
+            return res; 
+        }      
     }
 }
 
