@@ -167,7 +167,7 @@ class listaVec{
     }
 
     recuperar(valor){
-
+        console.log(valor)
     }
 
     insertar(dato,posicion,fila,columna){

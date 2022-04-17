@@ -291,13 +291,13 @@ dec_vectores
 ;
 //ACCESO
 acs_vectores
-    : IDENTIFICADOR CORIZQ ENTERO CORDER {$$= new nodo("acsVec1","acsVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3)}
-    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER {$$= new nodo("acsVec2","acsVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
+    : IDENTIFICADOR CORIZQ expresion CORDER {$$= new nodo("acsVec1","acsVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3)}
+    | IDENTIFICADOR CORIZQ expresion CORDER CORIZQ expresion CORDER {$$= new nodo("acsVec2","acsVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
 ;
 //MODIFICAR
 mod_vectores
-    : IDENTIFICADOR CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec1","modVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
-    | IDENTIFICADOR CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL expresion {$$= new nodo("modVec2","modVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$9)}
+    : IDENTIFICADOR CORIZQ expresion CORDER IGUAL expresion {$$= new nodo("modVec1","modVec1"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6)}
+    | IDENTIFICADOR CORIZQ expresion CORDER CORIZQ expresion CORDER IGUAL expresion {$$= new nodo("modVec2","modVec2"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$9)}
 ;
 //************************* OPERADOR TERNARIO ************************
 terna
