@@ -172,8 +172,8 @@ instruccion
     | sen_for {$$=$1}
     | sen_dowhile PTCOMA {$$=$1}
     | sen_return PTCOMA {$$=$1}
-    | R_BREAK PTCOMA {$$= new nodo("Break",$1,this._$.first_line,@1.last_column);}
-    | R_CONTINUE PTCOMA {$$= new nodo("Continue",$1,this._$.first_line,@1.last_column);}
+    //| R_BREAK PTCOMA {$$= new nodo("Break",$1,this._$.first_line,@1.last_column);}
+    //| R_CONTINUE PTCOMA {$$= new nodo("Continue",$1,this._$.first_line,@1.last_column);}
     | metodos {$$=$1}
     | funcion {$$=$1}
     | llamada PTCOMA {$$=$1}
@@ -321,9 +321,11 @@ list_case
 ;
 s_case
     : R_CASE expresion DOSPTS instrucciones {$$= new nodo("SCase","SCase"); $$.addHijos($2,$4)}
+    | R_CASE expresion DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SCase","SCase"); $5= new nodo("Break","Break",this._$.first_line,@5.last_column); $$.addHijos($2,$4,$5)}}
 ;
 s_default
     : R_DEFAULT DOSPTS instrucciones {$$= new nodo("SDefault","SDefault"); $$.addHijos($3);}
+    | R_DEFAULT DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SDefault","SDefault"); $4= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$4);}
 ;
 //************************* SENTENCIA CICLICA WHILE ************************
 sen_while

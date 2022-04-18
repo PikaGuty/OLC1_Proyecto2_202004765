@@ -6,20 +6,15 @@ alv*/
 
 //string entero = 'a', entero2, entero3="a2";
 
-//int a[]= new int[4];
-int b[][]= new int[4][4];
+int x,y;
 
-int a = b[0][0];
-b[0][0]=4;
-/*
-a[1]=9;   
-a[2]=true;   
-a[3]=6;   
-int b = a[0];
-int c = a[1];
-int d = a[2];
-int e = a[3]; 
-*/                     
+while (x<5){
+    while (y<5){
+        println(x+"*"+y+"="+(x*y));
+        y++;
+    }
+    x++;
+}
 
 /*double c[]= new double[4];
 boolean d[]= new boolean[4];
@@ -93,14 +88,14 @@ if ("as"){
 
 switch( edad ) { 
     Case 10: 
-        // mas sentencias 
+        println("Tiene 10");
         Break; 
     Case 18: 
-        // mas sentencias 
-    Case 25: 
-        // mas sentencias Break; 
+        println("Tiene 18"); 
+    Case 18: 
+        println("Tiene 25");
     Default: 
-        // mas sentencias 
+        println("Default");
         Break; 
 }
 
