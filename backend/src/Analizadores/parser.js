@@ -7,8 +7,10 @@ var semantico = require("./Interprete");
 fs.readFile('./entrada.txt', (err, data) => {
     if (err) throw err;
     resultado=parser.parse(data.toString());
+
+    
     console.log(AST.imprimir(resultado));
-    let codigo = semantico.interpretar(resultado)
+    let codigo = semantico.interpretar(resultado,"General")
     semantico.tabla();
     console.log("\nSALIDA\n")
     console.log(codigo)

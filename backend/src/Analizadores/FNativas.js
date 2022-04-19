@@ -66,9 +66,28 @@ module.exports = {
                 return res;
         }
     },
+    tCharA: function(v1,fila,columna){
+        let res = new ResultadoOp();
+        if(v1.tipo=="String"){
+            res.tipo="Lista"
+            let pre = v1.valor.split("")
+            let lista=""
+            for (let i = 1; i < pre.length-1; i++) {
+                lista+=pre[i]
+            }
+            res.valor=lista
+            return res;
+        }else{
+            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"length\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
+            res.tipo="error";
+            res.valor="error";
+            return res;
+        }
+    },
     Flength: function(v1,fila,columna){
         //FALTAN LISTAS Y VECTORES
         let res = new ResultadoOp();
+        
         switch(v1.tipo){
             case "String":
                 res.tipo="Int";
@@ -80,10 +99,63 @@ module.exports = {
                 res.valor=cadr.length
                 return res;
             default:
-                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"length\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
-                res.tipo="error";
-                res.valor="error";
-                return res;
+                let list=[]
+                let valores=[]
+                
+                switch(v1.otro){
+                    case "AsignacionV":
+                        res.tipo="Int";
+                        list = v1.valor.split("")
+
+                        valores=[]
+                        for (let i = 1; i < list.length-1; i++) {
+                            if(list[i]!=","){
+                                valores.push(list[i])
+                            }
+                        }
+                        res.valor=valores.length
+                        return res;
+                    case "AsignacionV2":
+                        list = v1.valor.split("")
+                
+                        valores=""
+                        for (let i = 1; i < list.length-1; i++) {
+                            valores+=list[i]
+                        }
+
+                        list = valores.split("[")
+                        valores=""
+                        for (let i = 0; i < list.length; i++) {
+                            valores+=list[i]
+                        }
+
+                        list = valores.split("]")
+                        
+                        valores=""
+                        let sub;
+                        let lDef=[];
+                        for (let i = 0; i < list.length-1; i++) {
+                            sub=list[i].split(",")
+                            let sub2 =[];
+                            for (let j = 0; j < sub.length; j++) {
+                                if(sub[j]!=""){
+                                    sub2.push(sub[j])
+                                }
+                            }
+                            lDef.push(sub2)
+                        }
+
+                        //lDef.length,lDef[0].length
+                        
+                        res.tipo="Int";
+                        res.valor= lDef.length
+                        return res;
+                    default:
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"length\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
+                        res.tipo="error";
+                        res.valor="error";
+                        return res;
+                }
         }
     },
     typof: function(v1,fila,columna){

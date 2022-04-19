@@ -1,9 +1,10 @@
 var lista = require("./Analizadores/lista")
 class simbolo {
-    constructor(nombre,tipo1,tipo2,valor,linea,columna){
+    constructor(nombre,tipo1,tipo2,entorno,valor,linea,columna){
         this.nombre = nombre;
         this.tipo1 = tipo1;
         this.tipo2 = tipo2;
+        this.entorno = entorno;
         this.valor = valor;
         this.linea = linea;
         this.columna =  columna;
@@ -46,6 +47,7 @@ var tabla = (function(){
                     texto+=" -- "+simbolo.nombre
                     texto+=" -- "+simbolo.tipo1
                     texto+=" -- "+simbolo.tipo2
+                    texto+=" -- "+simbolo.entorno
                     if(simbolo.tipo1=="AsignacionV"){
                         texto+=" -- "+simbolo.valor+"\n";
                     }else{

@@ -104,11 +104,13 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 
 
 <<EOF>>				return 'EOF';
-.					{ console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column); }
+.					{errores.ListaErrores.getInstance().pushError(new errores.error("Léxico","Simbolo no permitido en el lenguaje: " + yytext,yylloc.first_line,yylloc.first_column)); }
 
 /lex
 
 %{
+    var errores = require("../Errores")
+    
     function nodo(etiqueta, valor, fila, columna){
         this.etiqueta=etiqueta;
         this.valor=valor;
@@ -152,12 +154,12 @@ identificador                       ([a-zA-Z])[a-zA-Z0-9_]*
 /* Definición de la gramática */
 ini
     : instrucciones EOF {$$=new nodo("Raiz","Raiz",this.$first_line,@1.last_column); $$.addHijos($1); return $$;} 
-    | EOF
+    | EOF 
 ;
 instrucciones
     : instrucciones instruccion {$1.addHijos($2); $$=$1;}
     | instruccion {$$= new nodo("Instrucciones","Instrucciones",this._$.first_line,@1.last_column); $$.addHijos($1);}
-    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); } 
+    | error {errores.ListaErrores.getInstance().pushError(new errores.error("Sintáctico","Este es un error sintáctico:" + yytext,this._$.first_line,this._$.first_column)); }  
 ;
 //############### INSTRUCCIONES ###############
 instruccion
@@ -180,7 +182,7 @@ instruccion
     | fprint PTCOMA {$$=$1}
     | fprintln PTCOMA {$$=$1}
     | frun PTCOMA {$$=$1}
-    | 
+    | error {errores.ListaErrores.getInstance().pushError(new errores.error("Sintáctico","Este es un error sintáctico:" + yytext,this._$.first_line,this._$.first_column)); }  
 ;
 //#############################################
 //TIPOS DE DATOS
