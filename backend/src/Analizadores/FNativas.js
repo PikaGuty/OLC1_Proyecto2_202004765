@@ -69,13 +69,20 @@ module.exports = {
     tCharA: function(v1,fila,columna){
         let res = new ResultadoOp();
         if(v1.tipo=="String"){
-            res.tipo="Lista"
+            res.tipo="Char"
             let pre = v1.valor.split("")
-            let lista=""
+            let lista=[]
+            let pa =""
+            pa +="["
             for (let i = 1; i < pre.length-1; i++) {
-                lista+=pre[i]
+                lista.push("\'"+pre[i]+"\'")
             }
-            res.valor=lista
+            
+            pa += lista.toString()
+            pa +="]"
+            //console.log(pa)
+            res.valor=pa
+            res.otro="Lista"
             return res;
         }else{
             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"length\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
@@ -161,6 +168,10 @@ module.exports = {
     typof: function(v1,fila,columna){
         let res = new ResultadoOp();
         res.tipo="String";
+        if(v1.otro=="AsignacionV"||v1.otro=="AsignacionV2"){
+            res.valor="\"vector\""
+            return res;
+        }
         res.valor="\""+v1.tipo+"\""
         return res;
     },
@@ -318,7 +329,7 @@ module.exports = {
         return res;        
     },
     terna: function(v1,v2,v3,fila,columna){
-        console.log("Condicion "+v1.valor) 
+        //console.log("Condicion "+v1.valor) 
         if(v1.tipo="Boolean"){
             if(v1.valor.toLowerCase()=="true"){
                 res.tipo = v2.tipo;
@@ -373,8 +384,9 @@ function fdecr(nom,fila,columna){
 }
 
 class ResultadoOp{
-    constructor(tipo,valor){
+    constructor(tipo,valor,otro){
         this.tipo=tipo;
         this.valor=valor;
+        this.otro=otro;
     }
 }

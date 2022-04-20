@@ -337,6 +337,9 @@ sen_while
 sen_for
     : R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
     | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
+    | R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
+    | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
+
 ;
 //************************* SENTENCIA CICLICA DO WHILE ************************
 sen_dowhile
