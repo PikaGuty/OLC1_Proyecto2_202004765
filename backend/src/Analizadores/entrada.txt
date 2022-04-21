@@ -12,10 +12,31 @@ alv*/
 
 //char b[] = toCharArray("HOLA");
 
-int i = 2;
-for ( int i=3; i<=7;i++ ){
-    Println("i="+i);
+
+for (int i=2; i<=10;i++ ){
+    println("**********************************");
+    Break;
 }
+
+/*int edad =22;
+switch( edad ) { 
+    Case 10: 
+        println("Tiene 10");
+        Break; 
+        println("Continua con 10");
+    Case 18: 
+        println("Tiene 18"); 
+        Break; 
+        println("Continua con 10");
+    Case 25: 
+        println("Tiene 25");
+        Break; 
+        println("Continua con 10");
+    Default: 
+        println("Default");
+        Break; 
+        println("Continua con 10");
+}*/
 
 
 /*double c[]= new double[4];

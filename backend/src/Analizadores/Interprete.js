@@ -527,10 +527,8 @@ function interpretar (raiz,ambito){
                 return null;
             }
         case "SFor":
-            permitir=true;
-            codigo+=interpretar(raiz.hijos[0],ambito)
-            
-            codigo+=funFor(raiz.hijos[1],raiz.hijos[2],raiz.hijos[3],ambito)
+            console.log("ANDO EN "+raiz.hijos[2].hijos[0].hijos[0].valor)
+            codigo+=funFor(raiz.hijos[1],raiz.hijos[2],raiz.hijos[3],ambito,true,raiz.hijos[0],ambito,raiz.hijos[0])
 
             return codigo
             
@@ -538,25 +536,23 @@ function interpretar (raiz,ambito){
     return codigo;
 }
 
-function funFor(cond,actualizacion,raiz,ambito){
+function funFor(cond,actualizacion,raiz,ambito,primero,ini){
     let codigo=""
+    if(primero){
+        permitir=true;
+        codigo+=interpretar(ini,ambito)
+    }
     
     condicion=evaluarExpresion(cond);
 
-    console.log(condicion.valor)
-       
     if(condicion.tipo=="Boolean"){
         if(condicion.valor.toLowerCase()=="true"){
             codigo+=interpretar(raiz,ambito)
-            interpretar(actualizacion)
-            if(condicion.tipo=="Boolean"){
-                if(condicion.valor.toLowerCase()=="true"){
-                    codigo+=funFor(cond,actualizacion,raiz,ambito)
-                }
-            }
+            interpretar(actualizacion,ambito)
+            codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini)
             return codigo;
         }else{
-            interpretar(actualizacion)
+            interpretar(actualizacion,ambito)
             return codigo
         }
     }else{
