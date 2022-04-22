@@ -175,7 +175,7 @@ instruccion
     | sen_dowhile PTCOMA {$$=$1}
     | sen_return PTCOMA {$$=$1}
     | R_BREAK PTCOMA {$$= new nodo("Break",$1,this._$.first_line,@1.last_column);}
-    //| R_CONTINUE PTCOMA {$$= new nodo("Continue",$1,this._$.first_line,@1.last_column);}
+    | R_CONTINUE PTCOMA {$$= new nodo("Continue",$1,this._$.first_line,@1.last_column);}
     | metodos {$$=$1}
     | funcion {$$=$1}
     | llamada PTCOMA {$$=$1}
@@ -323,13 +323,13 @@ list_case
 ;
 s_case
     : R_CASE expresion DOSPTS instrucciones {$$= new nodo("SCase","SCase"); $$.addHijos($2,$4)}
-    | R_CASE expresion DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SCase","SCase"); $5= new nodo("Break","Break",this._$.first_line,@5.last_column); $$.addHijos($2,$4,$5)}}
-    | R_CASE expresion DOSPTS instrucciones R_BREAK PTCOMA instrucciones {$$= new nodo("SCase","SCase"); $5= new nodo("Break","Break",this._$.first_line,@5.last_column); $$.addHijos($2,$4,$5)}}
+    //| R_CASE expresion DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SCase","SCase"); $5= new nodo("Break","Break",this._$.first_line,@5.last_column); $$.addHijos($2,$4,$5)}}
+    //| R_CASE expresion DOSPTS instrucciones R_BREAK PTCOMA instrucciones {$$= new nodo("SCase","SCase"); $5= new nodo("Break","Break",this._$.first_line,@5.last_column); $$.addHijos($2,$4,$5)}}
 ;
 s_default
     : R_DEFAULT DOSPTS instrucciones {$$= new nodo("SDefault","SDefault"); $$.addHijos($3);}
-    | R_DEFAULT DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SDefault","SDefault"); $4= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$4);}
-    | R_DEFAULT DOSPTS instrucciones R_BREAK PTCOMA instrucciones {$$= new nodo("SDefault","SDefault"); $4= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$4);}
+    //| R_DEFAULT DOSPTS instrucciones R_BREAK PTCOMA {$$= new nodo("SDefault","SDefault"); $4= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$4);}
+    //| R_DEFAULT DOSPTS instrucciones R_BREAK PTCOMA instrucciones {$$= new nodo("SDefault","SDefault"); $4= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$4);}
 ;
 //************************* SENTENCIA CICLICA WHILE ************************
 sen_while
@@ -341,7 +341,17 @@ sen_for
     | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
     | R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
     | R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $$.addHijos($3,$5,$7,$10);}
+    
+    //| R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones R_BREAK PTCOMA LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones R_BREAK PTCOMA LLAVDER {$$= new nodo("SFor","SFor");  $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones R_BREAK PTCOMA LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones R_BREAK PTCOMA LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
 
+    //| R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones R_BREAK PTCOMA instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA inc_dec PARDER LLAVIZQ instrucciones R_BREAK PTCOMA instrucciones LLAVDER {$$= new nodo("SFor","SFor");  $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ declaracion PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones R_BREAK PTCOMA instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    //| R_FOR PARIZQ asig_solo PTCOMA expresion PTCOMA asig_solo PARDER LLAVIZQ instrucciones R_BREAK PTCOMA instrucciones LLAVDER {$$= new nodo("SFor","SFor"); $11= new nodo("Break","Break",this._$.first_line,@4.last_column); $$.addHijos($3,$5,$7,$10,$11);}
+    
 ;
 //************************* SENTENCIA CICLICA DO WHILE ************************
 sen_dowhile

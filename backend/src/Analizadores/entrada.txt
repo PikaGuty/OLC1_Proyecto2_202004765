@@ -13,10 +13,14 @@ alv*/
 //char b[] = toCharArray("HOLA");
 
 
+
 for (int i=2; i<=10;i++ ){
-    println("**********************************");
+    println(1);
     Break;
+    println(2);
 }
+
+println(i);
 
 /*int edad =22;
 switch( edad ) { 

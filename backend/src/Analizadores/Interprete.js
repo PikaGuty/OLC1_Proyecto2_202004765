@@ -7,9 +7,9 @@ var fntiva = require("./FNativas")
 var tabsim = require("../tabla_simbolos")
 var errores = require("../Errores")
 
-let permitir=false;
+let permitir=false, brk=false,ctn=false,rtrn=false;
 
-function interpretar (raiz,ambito){
+function interpretar (raiz,ambito, lugar){
 
     let op;
     let res;
@@ -22,15 +22,27 @@ function interpretar (raiz,ambito){
 
     switch(raiz.etiqueta){
         case "Raiz":
-            raiz.hijos.forEach(hijo=> codigo+=interpretar(hijo,ambito))
+            raiz.hijos.forEach(hijo=> codigo+=interpretar(hijo,ambito,lugar))
             return codigo;
         case "Instrucciones":
-            raiz.hijos.forEach(hijo=> codigo+=interpretar(hijo,ambito))
+            raiz.hijos.forEach(hijo=>{ 
+                if(brk==false&&ctn==false&&rtrn==false)
+                    codigo+=interpretar(hijo,ambito,lugar)
+
+            })
             return codigo;
         case "Var":
             let t = raiz.hijos[0];
             raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito))
             return codigo;
+        
+        case "Break":
+            if(lugar=="CSwitch"||lugar=="SWhile"||lugar=="SDoWhile"||lugar=="SFor"){
+                brk=true;
+            }else{
+                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede colocar un break en esta parte",raiz.fila,raiz.columna));
+            }
+            return ""
         case "Asig":
             res=evaluarExpresion(raiz.hijos[1]);
             simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
@@ -380,7 +392,7 @@ function interpretar (raiz,ambito){
                     tabsim.tabla.getInstancia().modificarSimbolo(sim)
                 }else{
                     permitido=false;
-                    console.log("ES AUQI")
+                    //console.log("ES AUQI")
                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Error semantico, el dato \""+res.valor+"\" no es de tipo \""+tipo+"\"",raiz.hijos[2].fila,raiz.hijos[2].columna));
                 }
             }else{
@@ -469,11 +481,11 @@ function interpretar (raiz,ambito){
             condicion = evaluarExpresion(raiz.hijos[0]);
             if (condicion.tipo=="Boolean"){
                 if (condicion.valor.toLowerCase()=="true"){
-                    codigo+=interpretar(raiz.hijos[1],ambito)
+                    codigo+=interpretar(raiz.hijos[1],ambito,lugar)
                     return codigo;
                 }else{
                     if(raiz.hijos[2]!=null){
-                        codigo+=interpretar(raiz.hijos[2].hijos[0],ambito)
+                        codigo+=interpretar(raiz.hijos[2].hijos[0],ambito,lugar)
                         return codigo;
                     }
                     return codigo;
@@ -489,7 +501,7 @@ function interpretar (raiz,ambito){
             let cases = evaluarLCase(res,raiz.hijos[1],ambito)
             if(raiz.hijos[2]!=null){
                 if(!cases.salida){
-                    cases.codigo+=interpretar(raiz.hijos[2].hijos[0],ambito)
+                    cases.codigo+=interpretar(raiz.hijos[2].hijos[0],ambito,"CSwitch")
                 }
             }
             return cases.codigo;
@@ -497,10 +509,10 @@ function interpretar (raiz,ambito){
             res = evaluarExpresion(raiz.hijos[0]);
             if(res.tipo=="Boolean"){
                 if(res.valor.toLowerCase()=="true"){
-                    codigo+=interpretar(raiz.hijos[1],ambito)
+                    codigo+=interpretar(raiz.hijos[1],ambito,"SWhile")
                     res = evaluarExpresion(raiz.hijos[0]);
                     if(res.valor.toLowerCase()=="true"){
-                        codigo+=interpretar(raiz,ambito);
+                        codigo+=interpretar(raiz,ambito,"SWhile");
                         return codigo
                     }
                     return codigo;
@@ -512,12 +524,12 @@ function interpretar (raiz,ambito){
                 return null;
             }
         case "SDoWhile":
-            codigo+=interpretar(raiz.hijos[0],ambito)
+            codigo+=interpretar(raiz.hijos[0],ambito,"SDoWhile")
 
             res = evaluarExpresion(raiz.hijos[1]);
             if(res.tipo=="Boolean"){
                 if(res.valor.toLowerCase()=="true"){
-                    codigo+=interpretar(raiz,ambito);
+                    codigo+=interpretar(raiz,ambito,"SDoWhile");
                     return codigo;
                 }else{
                     return codigo
@@ -527,7 +539,7 @@ function interpretar (raiz,ambito){
                 return null;
             }
         case "SFor":
-            console.log("ANDO EN "+raiz.hijos[2].hijos[0].hijos[0].valor)
+            //console.log("ANDO EN "+raiz.hijos[2].hijos[0].hijos[0].valor)
             codigo+=funFor(raiz.hijos[1],raiz.hijos[2],raiz.hijos[3],ambito,true,raiz.hijos[0],ambito,raiz.hijos[0])
 
             return codigo
@@ -540,19 +552,27 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini){
     let codigo=""
     if(primero){
         permitir=true;
-        codigo+=interpretar(ini,ambito)
+        codigo+=interpretar(ini,ambito,"SFor")
     }
     
     condicion=evaluarExpresion(cond);
 
     if(condicion.tipo=="Boolean"){
         if(condicion.valor.toLowerCase()=="true"){
-            codigo+=interpretar(raiz,ambito)
-            interpretar(actualizacion,ambito)
-            codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini)
+            
+            codigo+=interpretar(raiz,ambito,"SFor")
+            
+            if(brk==false){
+                interpretar(actualizacion,ambito,"Normal")
+                codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini)
+            }else{
+                brk=false
+                return codigo;
+            }
+            
             return codigo;
         }else{
-            interpretar(actualizacion,ambito)
+            interpretar(actualizacion,ambito,"Normal")
             return codigo
         }
     }else{
@@ -590,7 +610,7 @@ function evaluarLCase(exp,raiz,ambito){
         let condicion = relacionales.igualacion(exp,res,raiz.hijos[i].hijos[0].fila,raiz.hijos[i].hijos[0].columna)
         
         if(condicion.valor=="true"){
-            analiz.codigo += interpretar(raiz.hijos[i].hijos[1],ambito)
+            analiz.codigo += interpretar(raiz.hijos[i].hijos[1],ambito,"CSwitch")
             if(raiz.hijos[i].hijos[2]!=null){
                 analiz.salida = true;
                 return analiz;
