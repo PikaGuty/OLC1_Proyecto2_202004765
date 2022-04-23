@@ -12,15 +12,22 @@ alv*/
 
 //char b[] = toCharArray("HOLA");
 
+int x,y;
+Do{
+    println("*********** "+x+" ***********");
+    //Do{
+        //println(x+"*"+y+"="+x*y);
+        //y++;
+        if(x==4){
+            Break;
+        }
+        println("AAAA");
+    //} while (y<=10);
+    y=0;
+    x++;
+} while (x<=10);
 
-
-for (int i=2; i<=10;i++ ){
-    println(1);
-    Break;
-    println(2);
-}
-
-println(i);
+println(x);
 
 /*int edad =22;
 switch( edad ) { 

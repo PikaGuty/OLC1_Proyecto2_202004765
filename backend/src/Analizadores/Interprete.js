@@ -43,6 +43,13 @@ function interpretar (raiz,ambito, lugar){
                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede colocar un break en esta parte",raiz.fila,raiz.columna));
             }
             return ""
+        case "Continue":
+            if(lugar=="SFor"||lugar=="SWhile"||lugar=="SDoWhile"){
+                ctn=true;
+            }else{
+                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede colocar un continue en esta parte",raiz.fila,raiz.columna));
+            }
+            return ""
         case "Asig":
             res=evaluarExpresion(raiz.hijos[1]);
             simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
@@ -510,6 +517,13 @@ function interpretar (raiz,ambito, lugar){
             if(res.tipo=="Boolean"){
                 if(res.valor.toLowerCase()=="true"){
                     codigo+=interpretar(raiz.hijos[1],ambito,"SWhile")
+                    if(brk){
+                        brk=false;
+                        return codigo;
+                    }
+                    if(ctn){
+                        ctn=false;
+                    }
                     res = evaluarExpresion(raiz.hijos[0]);
                     if(res.valor.toLowerCase()=="true"){
                         codigo+=interpretar(raiz,ambito,"SWhile");
@@ -525,10 +539,18 @@ function interpretar (raiz,ambito, lugar){
             }
         case "SDoWhile":
             codigo+=interpretar(raiz.hijos[0],ambito,"SDoWhile")
+            if(brk){
+                brk=false;
+                return codigo;
+            }
+            ///aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
             res = evaluarExpresion(raiz.hijos[1]);
             if(res.tipo=="Boolean"){
                 if(res.valor.toLowerCase()=="true"){
+                    if(ctn){
+                        ctn=false;
+                    }
                     codigo+=interpretar(raiz,ambito,"SDoWhile");
                     return codigo;
                 }else{
@@ -561,18 +583,21 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini){
         if(condicion.valor.toLowerCase()=="true"){
             
             codigo+=interpretar(raiz,ambito,"SFor")
-            
-            if(brk==false){
+            if(brk){
+                brk=false
+                return codigo;
+            }else if(ctn){
+                ctn=false
                 interpretar(actualizacion,ambito,"Normal")
                 codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini)
             }else{
-                brk=false
-                return codigo;
+                interpretar(actualizacion,ambito,"Normal")
+                codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini)
             }
             
             return codigo;
         }else{
-            interpretar(actualizacion,ambito,"Normal")
+            //interpretar(actualizacion,ambito,"Normal")
             return codigo
         }
     }else{
