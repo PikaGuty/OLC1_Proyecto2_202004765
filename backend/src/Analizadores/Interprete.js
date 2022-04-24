@@ -36,6 +36,11 @@ function interpretar (raiz,ambito, lugar){
             raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito))
             return codigo;
         
+        case "FParametros":
+            
+            raiz.hijos.forEach(hijo=> interpretar(hijo,ambito,lugar))
+            return codigo;
+        
         case "Break":
             if(lugar=="CSwitch"||lugar=="SWhile"||lugar=="SDoWhile"||lugar=="SFor"){
                 brk=true;
@@ -163,7 +168,7 @@ function interpretar (raiz,ambito, lugar){
                         if(simbolo.entorno==ambito){
                             if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
-                            }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                            }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                             }
                         }else{
@@ -217,7 +222,7 @@ function interpretar (raiz,ambito, lugar){
                     if(simbolo.entorno==ambito){
                         if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
-                        }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                        }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
                         }
                     }else{
@@ -244,7 +249,7 @@ function interpretar (raiz,ambito, lugar){
                         if(simbolo.entorno==ambito){
                             if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
-                            }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                            }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
                             }
                         }else{
@@ -274,7 +279,7 @@ function interpretar (raiz,ambito, lugar){
                         if(simbolo.entorno==ambito){
                             if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
-                            }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                            }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                             }
                         }else{
@@ -334,7 +339,7 @@ function interpretar (raiz,ambito, lugar){
                     if(simbolo.entorno==ambito){
                         if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
-                        }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                        }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
                         }
                     }else{
@@ -543,14 +548,25 @@ function interpretar (raiz,ambito, lugar){
                 brk=false;
                 return codigo;
             }
-            ///aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
+            if(ctn){
+                ctn=false;
+                res = evaluarExpresion(raiz.hijos[1]);
+                if(res.tipo=="Boolean"){
+                    if(res.valor.toLowerCase()=="true"){
+                        codigo+=interpretar(raiz,ambito,"SDoWhile");
+                        return codigo;
+                    }else{
+                        return codigo
+                    }
+                }else{
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                    return null;
+                }
+            }
             res = evaluarExpresion(raiz.hijos[1]);
             if(res.tipo=="Boolean"){
                 if(res.valor.toLowerCase()=="true"){
-                    if(ctn){
-                        ctn=false;
-                    }
                     codigo+=interpretar(raiz,ambito,"SDoWhile");
                     return codigo;
                 }else{
@@ -566,6 +582,99 @@ function interpretar (raiz,ambito, lugar){
 
             return codigo
             
+        case "SLlamada":
+            id = raiz.hijos[0].valor;
+            simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+            
+            if(simbolo.parametros.length>raiz.hijos[1].hijos.length){
+                console.log("La funcion posee mas parametros que la llamada")
+            }else if(simbolo.parametros.length<raiz.hijos[1].hijos.length){
+                console.log("La llamada posee mas parametros que la función")
+            }else{
+                bien = true;
+                for (i=0; i<simbolo.parametros.length;i++){
+                    res = evaluarExpresion(raiz.hijos[1].hijos[i]);
+                    let Sact = tabsim.tabla.getInstancia().getSimbolo(simbolo.parametros[i]);
+                    //********** COMPARACION **********
+                    //console.log(res.valor+" "+res.tipo)
+                    //console.log(Sact.valor+" "+Sact.tipo2)
+                    //*********************************
+                    tipo = Sact.tipo2;
+                    if (tipo==res.tipo){
+                        
+                        if(tipo=="Int"){
+                            if(-2147483648 <= res.valor && res.valor <= 2147483647){
+                                sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                            }else{
+                                bien = false;
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","os valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                            }
+                        }else{
+                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                        }
+                        //console.log(sim.nombre+" A "+sim.valor)
+                        if(sim!=null){
+                            tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                        }
+                        
+                    }else if(tipo=="Double"&&res.tipo=="Int"){
+                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                        if(sim!=null){
+                            tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                        }
+                    }else if(tipo=="Int"&&res.tipo=="Boolean"){
+                        if(res.valor.toString().toLowerCase()=="true"){
+                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                        }else{
+                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,0,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                        }
+                        if(sim!=null){
+                            tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                        }
+                    }else{
+                        bien = false;
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Error semantico, el dato \""+res.valor+"\" no es de tipo \""+tipo+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                    }
+                    tabsim.tabla.getInstancia().modificarSimbolo(sim)
+                }
+                console.log(raiz.hijos[1].valor)
+                codigo+=interpretar(simbolo.valor,id,"Funcion")
+                console.log(codigo)
+                return codigo
+            }
+            return "";
+        case "SFuncion":
+            id = raiz.hijos[0].valor;
+            LParametros = [];
+            interpretar(raiz.hijos[1],id,"Funcion")
+            sim= new tabsim.simbolo(id,"Funcion",raiz.hijos[2].valor,"General",raiz.hijos[3],id.flia,id.columna)
+            for(i=0;i<raiz.hijos[1].hijos.length;i++){
+                LParametros.push(raiz.hijos[1].hijos[i].hijos[1].hijos[0].valor)
+            }
+            sim.parametros=LParametros
+            
+            if(sim!=null){
+                let simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+                if(simbolo!=null){
+                    if(simbolo.entorno=="General"){
+                        if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.fila,raiz.columna));
+                        }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre "+sim.nombre,raiz.fila,raiz.columna));
+                        }
+                    }else{
+                        tabsim.tabla.getInstancia().pushSimbolo(sim)
+                    }
+                }else{
+                    tabsim.tabla.getInstancia().pushSimbolo(sim)
+                }
+                
+            }
+            //console.log(id)
+            //console.log(raiz.hijos[1].etiqueta)
+            //console.log(raiz.hijos[2].etiqueta)
+            //console.log(raiz.hijos[3].etiqueta)
+
     }
     return codigo;
 }
@@ -678,7 +787,7 @@ function variable(tipo,raiz,ambito){
                     if(simbolo.entorno==ambito){
                         if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.fila,raiz.columna));
-                        }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                        }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre "+sim.nombre,raiz.fila,raiz.columna));
                         }
                     }else{
@@ -724,7 +833,7 @@ function variable(tipo,raiz,ambito){
                             if(!permitir){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
                                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
-                                }else if(simbolo.tipo=="Funcion"||simbolo.tipo=="Metodo"){
+                                }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                                 }
                             }else{

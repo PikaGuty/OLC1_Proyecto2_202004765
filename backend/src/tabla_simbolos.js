@@ -8,6 +8,7 @@ class simbolo {
         this.valor = valor;
         this.linea = linea;
         this.columna =  columna;
+        this.parametros = null;
     }
 }
 
@@ -51,7 +52,11 @@ var tabla = (function(){
                     if(simbolo.tipo1=="AsignacionV"){
                         texto+=" -- "+simbolo.valor+"\n";
                     }else{
-                        texto+=" -- "+simbolo.valor+"\n";
+                        if(simbolo.parametros!=null){
+                            texto+=" -- "+simbolo.parametros+"\n";
+                        }else{
+                            texto+=" -- "+simbolo.valor+"\n";
+                        }
                     }
                     
                     cuenta++;

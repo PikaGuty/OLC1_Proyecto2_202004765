@@ -374,7 +374,7 @@ parametros
 ;
 
 parmetro 
-    : tipo IDENTIFICADOR {$$= new nodo("FPmt","FPmt");  $$.addHijos($1,new nodo("id",$2,this._$.first_line,@1.last_column))}
+    : tipo IDENTIFICADOR {$$= new nodo("Var","Var"); let a; a=new nodo("Dec","Dec");  a.addHijos(new nodo("id",$2,this._$.first_line,@1.last_column)); $$.addHijos($1,a) }
 ;
 //************************* METODOS ************************
 metodos

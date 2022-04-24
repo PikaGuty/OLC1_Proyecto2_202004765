@@ -278,7 +278,7 @@ case 111:
 this.$= new nodo("FParametros","FParametros");  this.$.addHijos($$[$0])
 break;
 case 113:
-this.$= new nodo("FPmt","FPmt");  this.$.addHijos($$[$0-1],new nodo("id",$$[$0],this._$.first_line,_$[$0-1].last_column))
+this.$= new nodo("Var","Var"); let a; a=new nodo("Dec","Dec");  a.addHijos(new nodo("id",$$[$0],this._$.first_line,_$[$0-1].last_column)); this.$.addHijos($$[$0-1],a) 
 break;
 case 114:
 this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-6],this._$.first_line,_$[$0-6].last_column),$$[$0-4],$$[$0-1]);
