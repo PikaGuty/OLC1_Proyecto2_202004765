@@ -1,12 +1,26 @@
-int a;
+/*int a;
 conversion(double pies, string tipo): double {
     if (tipo == "metro"){
         println(pies/3.281);
         return pies/3.281;
+        println("LLEGA ACA");
     }else{
         println(-1);
         return -1;
     }
+}*/
+conversion2(double pies, string tipo) {
+    if (tipo == "metro"){
+        int anio=2020;
+        int a = 1+anio++;
+        println(a);
+        println(anio);
+        println("LLEGA ACA");
+        //break;
+    }else{
+        println(-1);
+    }
 }
 
-conversion(2.2,"metro");
+
+run conversion2(2.2,"metro");

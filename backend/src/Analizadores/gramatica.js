@@ -272,7 +272,7 @@ case 108:
 this.$= new nodo("SFuncion","SFuncion"); this.$.addHijos(new nodo("id",$$[$0-8],this._$.first_line,_$[$0-8].last_column),$$[$0-6],$$[$0-3],$$[$0-1]);
 break;
 case 109:
-this.$= new nodo("SFuncion","SFuncion"); this.$.addHijos(new nodo("id",$$[$0-7],this._$.first_line,_$[$0-7].last_column),$$[$0-3],$$[$0-1]);
+this.$= new nodo("SFuncion","SFuncion"); this.$.addHijos(new nodo("id",$$[$0-7],this._$.first_line,_$[$0-7].last_column),new nodo("FParametrosLL","FParametrosLL"),$$[$0-3],$$[$0-1]);
 break;
 case 111:
 this.$= new nodo("FParametros","FParametros");  this.$.addHijos($$[$0])
@@ -287,13 +287,13 @@ case 115:
 this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-8],this._$.first_line,_$[$0-8].last_column),$$[$0-6],$$[$0-1]);
 break;
 case 116:
-this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-5],this._$.first_line,_$[$0-5].last_column),$$[$0-1]);
+this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-5],this._$.first_line,_$[$0-5].last_column),new nodo("FParametrosLL","FParametrosLL"),$$[$0-1]);
 break;
 case 117:
-this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-7],this._$.first_line,_$[$0-7].last_column),$$[$0-1]);
+this.$= new nodo("SMetodo","SMetodo"); this.$.addHijos(new nodo("id",$$[$0-7],this._$.first_line,_$[$0-7].last_column),new nodo("FParametrosLL","FParametrosLL"),$$[$0-1]);
 break;
 case 118:
-this.$= new nodo("SLlamada","SLlamada"); this.$.addHijos(new nodo("id",$$[$0-2],this._$.first_line,_$[$0-2].last_column));
+this.$= new nodo("SLlamada","SLlamada"); this.$.addHijos(new nodo("id",$$[$0-2],this._$.first_line,_$[$0-2].last_column),new nodo("FParametrosLL","FParametrosLL"));
 break;
 case 119:
 this.$= new nodo("SLlamada","SLlamada"); this.$.addHijos(new nodo("id",$$[$0-3],this._$.first_line,_$[$0-3].last_column),$$[$0-1]);

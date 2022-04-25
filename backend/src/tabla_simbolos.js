@@ -38,6 +38,16 @@ var tabla = (function(){
             return res;
         }
 
+        getSimboloP(nombre,ambito){
+            let res = null;
+            this.simbolos.forEach(simbolo=>{
+                if(simbolo.nombre==nombre&&simbolo.entorno==ambito){
+                    res=simbolo;
+                }
+            })
+            return res;
+        }
+
         getsimbolos(){
             var texto="";
 
@@ -71,6 +81,21 @@ var tabla = (function(){
         modificarSimbolo(simb){
             this.simbolos.forEach(simbolo=>{
                 if(simb.nombre==simbolo.nombre){
+                    simbolo.nombre = simb.nombre;
+                    simbolo.tipo1 = simb.tipo1;
+                    simbolo.tipo2 = simb.tipo2;
+                    simbolo.valor = simb.valor;
+                    simbolo.linea = simb.linea;
+                    simbolo.columna =  simb.columna;
+                }
+            })
+        }
+
+        modificarSimboloP(simb,am){
+            
+            this.simbolos.forEach(simbolo=>{
+                
+                if(simb.nombre==simbolo.nombre&&simbolo.entorno==am){
                     simbolo.nombre = simb.nombre;
                     simbolo.tipo1 = simb.tipo1;
                     simbolo.tipo2 = simb.tipo2;

@@ -294,16 +294,16 @@ module.exports = {
         }
     },
 
-    incr: function(nom,v1,fila,columna){
+    incr: function(nom,v1,fila,columna,ambi){
         if(v1.tipo=="Int"){
             res.tipo="Int";
             res.valor=v1.valor
-            fincr(nom,fila,columna)
+            fincr(nom,fila,columna,ambi)
             return res;
         }else if(v1=="Double"){
             res.tipo="Double";
             res.valor=v1.valor
-            fincr(nom,fila,columna)
+            fincr(nom,fila,columna,ambi)
             return res;
         }
         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
@@ -349,12 +349,12 @@ module.exports = {
     }
 }
 
-function fincr(nom,fila,columna){
+function fincr(nom,fila,columna,ambi){
     simbolo = tabsim.tabla.getInstancia().getSimbolo(nom);
     if(simbolo!=null){
         let tipo = simbolo.tipo2;
         if(tipo=="Double"||tipo=="Int"){
-            sim = new tabsim.simbolo(nom,"Incremento",tipo,parseInt(simbolo.valor)+1,fila,columna)
+            sim = new tabsim.simbolo(nom,"Incremento",tipo,ambi,parseInt(simbolo.valor)+1,fila,columna)
         }else{
             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
         }
@@ -366,12 +366,12 @@ function fincr(nom,fila,columna){
     }
 }
 
-function fdecr(nom,fila,columna){
+function fdecr(nom,fila,columna,ambi){
     simbolo = tabsim.tabla.getInstancia().getSimbolo(nom);
     if(simbolo!=null){
         let tipo = simbolo.tipo2;
         if(tipo=="Double"||tipo=="Int"){
-            sim = new tabsim.simbolo(nom,"Decremento",tipo,parseInt(simbolo.valor)-1,fila,columna)
+            sim = new tabsim.simbolo(nom,"Decremento",tipo,ambi,parseInt(simbolo.valor)-1,fila,columna)
         }else{
             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede incrementar la variable: \""+nom+"\" por que no es de tipo numérico",fila,columna));
         }

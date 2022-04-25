@@ -364,7 +364,7 @@ sen_return
 //************************* FUNCIONES ************************
 funcion
     : IDENTIFICADOR PARIZQ parametros PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6,$8);}
-    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$5,$7);}
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS tipo LLAVIZQ instrucciones LLAVDER {$$= new nodo("SFuncion","SFuncion"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),new nodo("FParametrosLL","FParametrosLL"),$5,$7);}
 ;
 
 parametros 
@@ -380,11 +380,11 @@ parmetro
 metodos
     : IDENTIFICADOR PARIZQ parametros PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$6);}
     | IDENTIFICADOR PARIZQ parametros PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3,$8);}
-    | IDENTIFICADOR PARIZQ PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$5);}
-    | IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$7);}
+    | IDENTIFICADOR PARIZQ PARDER LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),new nodo("FParametrosLL","FParametrosLL"),$5);}
+    | IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ instrucciones LLAVDER {$$= new nodo("SMetodo","SMetodo"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),new nodo("FParametrosLL","FParametrosLL"),$7);}
 ;
 llamada
-    : IDENTIFICADOR PARIZQ PARDER  {$$= new nodo("SLlamada","SLlamada"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column));}
+    : IDENTIFICADOR PARIZQ PARDER  {$$= new nodo("SLlamada","SLlamada"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),new nodo("FParametrosLL","FParametrosLL"));}
     | IDENTIFICADOR PARIZQ parametros_llamada PARDER {$$= new nodo("SLlamada","SLlamada"); $$.addHijos(new nodo("id",$1,this._$.first_line,@1.last_column),$3);}
 ;
 parametros_llamada
