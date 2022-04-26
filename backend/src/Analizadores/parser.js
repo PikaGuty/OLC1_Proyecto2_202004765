@@ -10,7 +10,9 @@ fs.readFile('./entrada.txt', (err, data) => {
 
     
     console.log(AST.imprimir(resultado));
-    let codigo = semantico.interpretar(resultado,"General","Normal")
+    semantico.interpretar(resultado,"General","Normal",true)
+    let codigo = semantico.interpretar(resultado,"General","Normal",false)
+    
     semantico.tabla();
     console.log("\nSALIDA\n")
     console.log(codigo)
