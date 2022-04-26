@@ -302,34 +302,34 @@ case 121:
 this.$= new nodo("FParametrosLL","FParametrosLL");  this.$.addHijos($$[$0])
 break;
 case 122:
-this.$= new nodo("FPrint","FPrint"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FPrint","FPrint",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 123:
-this.$= new nodo("FPrintln","FPrintln"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FPrintln","FPrintln",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 124:
-this.$= new nodo("FToLower","FToLower"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FToLower","FToLower",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 125:
-this.$= new nodo("FToUpper","FToUpper"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FToUpper","FToUpper",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 126:
-this.$= new nodo("FRound","FRound"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FRound","FRound",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 127:
-this.$= new nodo("FLength","FLength"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FLength","FLength",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 128:
-this.$= new nodo("FTypeOf","FTypeOf"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FTypeOf","FTypeOf",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 129:
-this.$= new nodo("FToString","FToString"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FToString","FToString",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 130:
-this.$= new nodo("FToCharArray","FToCharArray"); this.$.addHijos($$[$0-1])
+this.$= new nodo("FToCharArray","FToCharArray",this._$.first_line,_$[$0-3].last_column); this.$.addHijos($$[$0-1])
 break;
 case 131:
-this.$= new nodo("FRun","FRun"); this.$.addHijos($$[$0])
+this.$= new nodo("FRun","FRun",this._$.first_line,_$[$0-1].last_column); this.$.addHijos($$[$0])
 break;
 }
 },

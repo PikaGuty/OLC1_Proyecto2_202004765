@@ -393,42 +393,42 @@ parametros_llamada
 ;
 //************************* PRINT ************************
 fprint
-    : R_PRINT PARIZQ expresion PARDER  {$$= new nodo("FPrint","FPrint"); $$.addHijos($3)}
+    : R_PRINT PARIZQ expresion PARDER  {$$= new nodo("FPrint","FPrint",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* PRINT LN ************************
 fprintln
-    : R_PRINTLN PARIZQ expresion PARDER {$$= new nodo("FPrintln","FPrintln"); $$.addHijos($3)}
+    : R_PRINTLN PARIZQ expresion PARDER {$$= new nodo("FPrintln","FPrintln",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* TO LOWER ************************
 ftolower
-    : R_TOLOWER PARIZQ expresion PARDER {$$= new nodo("FToLower","FToLower"); $$.addHijos($3)}
+    : R_TOLOWER PARIZQ expresion PARDER {$$= new nodo("FToLower","FToLower",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* TO UPPER ************************
 ftoupper
-    : R_TOUPPER PARIZQ expresion PARDER {$$= new nodo("FToUpper","FToUpper"); $$.addHijos($3)}
+    : R_TOUPPER PARIZQ expresion PARDER {$$= new nodo("FToUpper","FToUpper",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* ROUND ************************
 fround
-    : R_ROUND PARIZQ expresion PARDER {$$= new nodo("FRound","FRound"); $$.addHijos($3)}
+    : R_ROUND PARIZQ expresion PARDER {$$= new nodo("FRound","FRound",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* LENGTH ************************
 flength
-    : R_LENGTH PARIZQ expresion PARDER {$$= new nodo("FLength","FLength"); $$.addHijos($3)}
+    : R_LENGTH PARIZQ expresion PARDER {$$= new nodo("FLength","FLength",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* TYPEOF ************************
 ftypeof
-    : R_TYPEOF PARIZQ expresion PARDER {$$= new nodo("FTypeOf","FTypeOf"); $$.addHijos($3)}
+    : R_TYPEOF PARIZQ expresion PARDER {$$= new nodo("FTypeOf","FTypeOf",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* TO STRING ************************
 ftostring
-    : R_TOSTRING PARIZQ expresion PARDER {$$= new nodo("FToString","FToString"); $$.addHijos($3)}
+    : R_TOSTRING PARIZQ expresion PARDER {$$= new nodo("FToString","FToString",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* TO CHAR ARRAY ************************
 ftochararray
-    : R_TOCHARARRAY PARIZQ expresion PARDER {$$= new nodo("FToCharArray","FToCharArray"); $$.addHijos($3)}
+    : R_TOCHARARRAY PARIZQ expresion PARDER {$$= new nodo("FToCharArray","FToCharArray",this._$.first_line,@1.last_column); $$.addHijos($3)}
 ;
 //************************* RUN ************************
 frun
-    : R_RUN llamada {$$= new nodo("FRun","FRun"); $$.addHijos($2)}
+    : R_RUN llamada {$$= new nodo("FRun","FRun",this._$.first_line,@1.last_column); $$.addHijos($2)}
 ;
 //*************************************************************************
