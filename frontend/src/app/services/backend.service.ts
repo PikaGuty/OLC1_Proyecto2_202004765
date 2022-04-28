@@ -10,11 +10,23 @@ export class BackendService {
   
   URL:string = 'http://127.0.0.1:4000';
 
-  VerRegistros(){
-    return this.http.get(`${this.URL}/ver`)
+  //VerRegistros(){
+    //return this.http.get(`${this.URL}/ver`)
+  //}
+
+  Analizar(cuerpo:any){
+    //console.log(cuerpo)
+    return this.http.post(`${this.URL}/analizar`, cuerpo)
   }
-  AgregarRegistros(cuerpo:any){
-    return this.http.post(`${this.URL}/agregar`, cuerpo)
+
+  Ast(){
+    //console.log(cuerpo)
+    return this.http.get(`${this.URL}/ast`)
+  }
+
+  Simbolos(){
+    //console.log(cuerpo)
+    return this.http.get(`${this.URL}/tsim`)
   }
   
 }

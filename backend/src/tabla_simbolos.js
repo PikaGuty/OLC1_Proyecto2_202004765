@@ -17,7 +17,7 @@ var tabla = (function(){
 
     class tabla{
         constructor(){
-            this.simbolos=[];
+            this.simbolos=Array();
         }
 
         pushSimbolo(simbolos){
@@ -40,11 +40,21 @@ var tabla = (function(){
 
         getSimboloP(nombre,ambito){
             let res = null;
+            let flag=false
             this.simbolos.forEach(simbolo=>{
                 if(simbolo.nombre==nombre&&simbolo.entorno==ambito){
                     res=simbolo;
+                    flag=true;
                 }
             })
+            if(!flag){
+                this.simbolos.forEach(simbolo=>{
+                    if(simbolo.nombre==nombre&&simbolo.entorno=="General"){
+                        res=simbolo;
+                    }
+                })
+            }
+            
             return res;
         }
 
@@ -78,6 +88,44 @@ var tabla = (function(){
              return texto;
         } 
 
+        getTablaSimbolos(){
+            var texto={};
+            var simb=[]
+            var cuenta=1;
+            this.simbolos.forEach(simbolo =>{
+                try{
+                    let valor=""
+                    if(simbolo.tipo1=="AsignacionV"){
+                        valor=simbolo.valor
+                    }else{
+                        if(simbolo.parametros!=null){
+                            valor=simbolo.parametros;
+                        }else{
+                            valor=simbolo.valor;
+                        }
+                    }
+
+                    simb.push({
+                        cuenta:cuenta,
+                        nombre:simbolo.nombre,
+                        tipo1:simbolo.tipo1,
+                        tipo2:simbolo.tipo2,
+                        entorno:simbolo.entorno,
+                        valor:valor
+                    })
+                    
+                    cuenta++;
+                }catch(e){
+
+                }
+                
+            })
+            
+            texto.simbolos=simb
+            console.log(texto)
+            return (texto);
+        } 
+
         modificarSimbolo(simb){
             this.simbolos.forEach(simbolo=>{
                 if(simb.nombre==simbolo.nombre){
@@ -94,8 +142,15 @@ var tabla = (function(){
         modificarSimboloP(simb,am){
             
             this.simbolos.forEach(simbolo=>{
-                
+                //console.log(simb.nombre)
                 if(simb.nombre==simbolo.nombre&&simbolo.entorno==am){
+                    simbolo.nombre = simb.nombre;
+                    simbolo.tipo1 = simb.tipo1;
+                    simbolo.tipo2 = simb.tipo2;
+                    simbolo.valor = simb.valor;
+                    simbolo.linea = simb.linea;
+                    simbolo.columna =  simb.columna;
+                }else if(simb.nombre==simbolo.nombre&&simbolo.entorno=="General"){
                     simbolo.nombre = simb.nombre;
                     simbolo.tipo1 = simb.tipo1;
                     simbolo.tipo2 = simb.tipo2;

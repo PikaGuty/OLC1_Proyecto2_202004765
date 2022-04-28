@@ -12,12 +12,14 @@
                 <div class="row">
                     <div class="col-xl-15 col-lg-14">
                         <div class="card shadow mb-4">
-                            <div class="card shadow">
+                            <div class="card shadow" >
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-sitemap"></i> Árbol AST</h6>
                                 </div>
-                                <div class="card-body">
-                                    AQUI
+                                <div class="card-body" style="height: 500px;position:relative; max-height:100%;overflow:auto;">
+                                    <div *ngIf="mostrar; then thenBlock else elseBlock"></div>
+                                    <ng-template #thenBlock><img src="./assets/ast.svg"></ng-template>
+                                    <ng-template #elseBlock>Error</ng-template>
                                 </div>
                             </div>
                         </div>

@@ -24,13 +24,13 @@
                             <div class="card shadow ">
                                 <div class="card-header py-3 d-flex ">
                                     <div class="p-2 py-3"><h6 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-code"></i> Editor</h6></div>
-                                    <div class="ml-auto p-2"><button type="button" (click)="Ejecutar()" class="btn btn-success"><i class="fa-solid fa-terminal"></i> Ejecutar</button>&nbsp;</div>
+                                    <div class="ml-auto p-2"><button type="button" (click)="this.Ejecutar()" class="btn btn-success"><i class="fa-solid fa-terminal"></i> Ejecutar</button>&nbsp;</div>
                 
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
                                         
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" [(ngModel)]=contenido ></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="20" [(ngModel)]=this.contenido ></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="15" [(ngModel)]=consola disabled></textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="15" [(ngModel)]=this.consola disabled></textarea>
                                     </div>
                                 </div>
                             </div>

@@ -25,7 +25,9 @@ function interpretar (raiz,ambito, lugar, pasada){
     if(raiz===undefined || raiz===null)return;
     switch(raiz.etiqueta){
         case "Raiz":
+            
             raiz.hijos.forEach(hijo=> codigo+=interpretar(hijo,ambito,lugar,pasada))
+            console.log("AAAAA "+codigo)
             return codigo;
         case "Instrucciones":
             raiz.hijos.forEach(hijo=>{ 
@@ -82,14 +84,16 @@ function interpretar (raiz,ambito, lugar, pasada){
             if(!pasada){
                 if(ambito!="General"){
                     res=evaluarExpresion(raiz.hijos[1],ambito);
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambito);
                     if(simbolo!=null){
+
                         if(res.otro!="Lista"){
                             let tipo = simbolo.tipo2;
                             if (tipo==res.tipo){
                                 if(tipo=="Int"){
                                     if(-2147483648 <= res.valor && res.valor <= 2147483647){
                                         sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+
                                     }else{
                                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                                     }
@@ -130,7 +134,7 @@ function interpretar (raiz,ambito, lugar, pasada){
         case "Incr":
             if(!pasada){
                 if(ambito!="General"){
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].hijos[0].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].hijos[0].valor,ambito);
                     if(simbolo!=null){
                         let tipo = simbolo.tipo2;
                         if(tipo=="Double"||tipo=="Int"){
@@ -152,7 +156,7 @@ function interpretar (raiz,ambito, lugar, pasada){
         case "Decr":
             if(!pasada){
                 if(ambito!="General"){
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].hijos[0].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].hijos[0].valor,ambito);
                     if(simbolo!=null){
                         let tipo = simbolo.tipo2;
                         if(tipo=="Double"||tipo=="Int"){
@@ -220,7 +224,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     res=evaluarExpresion(raiz.hijos[3],ambito);
                     if(res.tipo=="Int"){
                         vector1 = new lista.listaVec(raiz.hijos[2].valor,parseInt(res.valor))
-                        simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                        simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
                         sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
@@ -274,7 +278,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         }
 
                     }
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
                     sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
                     if(simbolo!=null){
                         if(simbolo.entorno==ambito){
@@ -301,7 +305,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         
                         vector1 = new lista.listaVec(tipo,les.length)
                         
-                        simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                        simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
                         sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,res1.valor,raiz.fila,raiz.columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
@@ -333,7 +337,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     res2=evaluarExpresion(raiz.hijos[3],ambito);
                     if(res1.tipo=="Int"||res2.tipo=="Int"){
                         vector1 = new lista.listaVec2(raiz.hijos[2].valor,parseInt(res1.valor),parseInt(res2.valor))
-                        simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                        simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
                         sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
@@ -393,7 +397,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                             }
                         }
                     }
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[1].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
                     sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[0].valor,ambito,vector2.reg(),raiz.fila,raiz.columna)
                     if(simbolo!=null){
                         if(simbolo.entorno==ambito){
@@ -421,7 +425,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     res = new ResultadoOp();
                     
                     res1=evaluarExpresion(raiz.hijos[1],ambito);
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambito);
                     //console.log("RES")
                     if(simbolo!=null){
                         let list = simbolo.valor.split("")
@@ -485,7 +489,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     res2=evaluarExpresion(raiz.hijos[2],ambito);
                     res = evaluarExpresion(raiz.hijos[3],ambito);
                     
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambito);
                     if(simbolo!=null){
                         let list = simbolo.valor.split("")
                         
@@ -711,7 +715,9 @@ function interpretar (raiz,ambito, lugar, pasada){
             if(!pasada){
                 if(ambito!="General"||habilitarLlamada){
                     id = raiz.hijos[0].valor;
-                    simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+                    //console.log("ID "+id)
+                    simbolo = tabsim.tabla.getInstancia().getSimboloP(id,ambito);
+                    ambitoa=ambito
                     ambito = id
                     if(simbolo.tipo1=="Funcion"){
                         if(simbolo.parametros.length>raiz.hijos[1].hijos.length){
@@ -721,7 +727,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         }else{
                             bien = true;
                             for (i=0; i<simbolo.parametros.length;i++){
-                                res = evaluarExpresion(raiz.hijos[1].hijos[i],ambito);
+                                res = evaluarExpresion(raiz.hijos[1].hijos[i],ambitoa);
                                 let Sact = tabsim.tabla.getInstancia().getSimboloP(simbolo.parametros[i],id);
                                 //********** COMPARACION **********
                                 //console.log(res.valor+" "+res.tipo)
@@ -801,7 +807,9 @@ function interpretar (raiz,ambito, lugar, pasada){
                             
                             bien = true;
                             for (i=0; i<simbolo.parametros.length;i++){
-                                res = evaluarExpresion(raiz.hijos[1].hijos[i],ambito);
+                                //console.log("aa "+raiz.hijos[1].hijos[i].hijos[0].valor)
+                                res = evaluarExpresion(raiz.hijos[1].hijos[i],ambitoa);
+                                //console.log(res)
                                 let Sact = tabsim.tabla.getInstancia().getSimboloP(simbolo.parametros[i],id);
                                 //********** COMPARACION **********
                                 //console.log(res.valor+" "+res.tipo)
@@ -872,7 +880,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     sim.parametros=LParametros
                     
                     if(sim!=null){
-                        let simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+                        let simbolo = tabsim.tabla.getInstancia().getSimboloP(id,ambito);
                         if(simbolo!=null){
                             if(simbolo.entorno=="General"){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -906,7 +914,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     sim.parametros=LParametros
                     
                     if(sim!=null){
-                        let simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+                        let simbolo = tabsim.tabla.getInstancia().getSimboloP(id,ambito);
                         if(simbolo!=null){
                             if(simbolo.entorno=="General"){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -1035,7 +1043,7 @@ function variable(tipo,raiz,ambito){
                     break;
             }
             if(sim!=null){
-                let simbolo = tabsim.tabla.getInstancia().getSimbolo(sim.nombre);
+                let simbolo = tabsim.tabla.getInstancia().getSimboloP(sim.nombre,ambito);
                 if(simbolo!=null){
                     if(simbolo.entorno==ambito){
                         if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -1080,7 +1088,7 @@ function variable(tipo,raiz,ambito){
             }
             if(sim!=null){
                 if(res.otro!="Lista"){
-                    let simbolo = tabsim.tabla.getInstancia().getSimbolo(sim.nombre);
+                    let simbolo = tabsim.tabla.getInstancia().getSimboloP(sim.nombre,ambito);
                     if(simbolo!=null){
                         if(simbolo.entorno==ambito){
                             if(!permitir){
@@ -1192,7 +1200,7 @@ function evaluarExpresion(raiz,ambi){
         case "acsVec1":
             res = new ResultadoOp();
             res1=evaluarExpresion(raiz.hijos[1],ambi);
-            simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+            simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambi);
             if(simbolo!=null){
                 let list = simbolo.valor.split("")
                 
@@ -1231,7 +1239,7 @@ function evaluarExpresion(raiz,ambi){
             
             res1=evaluarExpresion(raiz.hijos[1],ambi);
             res2=evaluarExpresion(raiz.hijos[2],ambi);
-            simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.hijos[0].valor);
+            simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambi);
             if(simbolo!=null){
                 let list = simbolo.valor.split("")
                 
@@ -1292,7 +1300,7 @@ function evaluarExpresion(raiz,ambi){
                 res = new ResultadoOp()
 
                 id = raiz.hijos[0].valor;
-                simbolo = tabsim.tabla.getInstancia().getSimbolo(id);
+                simbolo = tabsim.tabla.getInstancia().getSimboloP(id,ambi);
                 ambito=id
                 if(simbolo.tipo1=="Funcion"){
                     if(simbolo.parametros.length>raiz.hijos[1].hijos.length){
@@ -1393,11 +1401,14 @@ function evaluarExpresion(raiz,ambi){
                 return res
         case "id":
             res = new ResultadoOp();
-            simbolo = tabsim.tabla.getInstancia().getSimbolo(raiz.valor);
+            simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.valor,ambi);
+            //console.log("buscando "+raiz.valor+" en "+ambi)
             if(simbolo!=null){
                 res.tipo=simbolo.tipo2;
                 res.valor=simbolo.valor;
                 res.otro=simbolo.tipo1;
+
+                //console.log(raiz.valor+" DE VOY A REOTRNAR "+simbolo.tipo2+" "+simbolo.valor+" "+simbolo.tipo1)
                 return res;
             }else{
                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.valor+"\"",raiz.fila,raiz.columna));
@@ -1470,4 +1481,9 @@ class analizao{
     }
 }
 
-module.exports={interpretar,tabla}
+module.exports={interpretar,tabla,permitir,brk,ctn,rtrn,valRtrn,codFun,unicoRun,habilitarLlamada}
+
+/*let permitir=false, brk=false,ctn=false,rtrn=false,valRtrn=null;
+let codFun="";
+let unicoRun=true;
+let habilitarLlamada=false;*/

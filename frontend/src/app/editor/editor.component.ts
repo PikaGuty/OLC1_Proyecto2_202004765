@@ -10,18 +10,39 @@ import { BackendService } from '../services/backend.service';
 })
 export class EditorComponent implements OnInit {
   ruta = ""
-  contenido:any
+  contenido=""
   consola = ""
+  aux:any={
+    cod:''
+  }
 
   constructor(private backend: BackendService) { 
-    this.Ejecutar()
+    //this.Ejecutar()
   }
 
   ngOnInit(): void {
   }
 
   Ejecutar(){
-    this.backend.VerRegistros().subscribe(
+    let texto=this.contenido;
+    //console.log(this.contenido)
+    this.aux.cod=texto
+    let resultado:any
+    let js:any
+    this.backend.Analizar(this.aux).subscribe(
+      res=>{
+        //alert("BIEN")
+        js = JSON.parse(JSON.stringify(res)) 
+        this.consola= js.Respuesta
+        alert("Bien")
+        console.log("has",js.Respuesta)
+      },
+      err=>{
+        alert("Ocurrió un error")
+      }
+    )
+    
+    /*this.backend.VerRegistros().subscribe(
       res=>{
         var data = JSON.stringify(res)
         var data2 = JSON.parse(data)
@@ -31,7 +52,7 @@ export class EditorComponent implements OnInit {
       err=>{
         console.log("Error")
       }
-    )
+    )*/
   }
   
   abrir(event:any) {
@@ -46,9 +67,7 @@ export class EditorComponent implements OnInit {
       
     }
     fileReader.readAsText(file)   
-  
-    alert(this.contenido)
-}
+  }
 
   nuevo(){
     this.contenido=""
