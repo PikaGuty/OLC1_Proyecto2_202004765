@@ -7,7 +7,7 @@ import { BackendService } from '../services/backend.service';
   styleUrls: ['./tabla-simbolos.component.css']
 })
 export class TablaSimbolosComponent implements OnInit {
-
+  simbolos:any
   constructor(private backend: BackendService) { 
     this.mostrar()
   }
@@ -16,13 +16,12 @@ export class TablaSimbolosComponent implements OnInit {
   }
 
   mostrar(){
-this.backend.Simbolos().subscribe(
+    this.backend.Simbolos().subscribe(
       res=>{
         var data = JSON.stringify(res)
         var data2 = JSON.parse(data)
-        console.log(data2.simbolos)
+        this.simbolos=data2.simbolos
         
-
       },
       err=>{
         console.log("Error")

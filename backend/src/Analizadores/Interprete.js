@@ -13,7 +13,7 @@ let unicoRun=true;
 let habilitarLlamada=false;
 
 function interpretar (raiz,ambito, lugar, pasada){
-
+    //console.log(pasada+"YYYYYYYYYYY "+lugar+" "+raiz.valor)
     let op;
     
     let res;
@@ -25,9 +25,8 @@ function interpretar (raiz,ambito, lugar, pasada){
     if(raiz===undefined || raiz===null)return;
     switch(raiz.etiqueta){
         case "Raiz":
-            
             raiz.hijos.forEach(hijo=> codigo+=interpretar(hijo,ambito,lugar,pasada))
-            console.log("AAAAA "+codigo)
+            //console.log("AAAAA "+codigo)
             return codigo;
         case "Instrucciones":
             raiz.hijos.forEach(hijo=>{ 
@@ -37,9 +36,11 @@ function interpretar (raiz,ambito, lugar, pasada){
             })
             return codigo;
         case "Var":
+            //console.log(ambito+" "+lugar+" "+" "+raiz.hijos[1].valor+" "+raiz.hijos[1].hijos[0].valor+" ")
             if(!pasada){
                 let t = raiz.hijos[0];
-                raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito))
+                //console.log(ambito+" "+lugar+" "+t.valor+" "+raiz.hijos[1].valor+" "+raiz.hijos[1].hijos[0].valor+" ")
+                raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito,lugar))
                 codigo = codFun;
                 codFun = ""
                 return codigo;
@@ -92,22 +93,22 @@ function interpretar (raiz,ambito, lugar, pasada){
                             if (tipo==res.tipo){
                                 if(tipo=="Int"){
                                     if(-2147483648 <= res.valor && res.valor <= 2147483647){
-                                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
 
                                     }else{
                                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                                     }
                                 }else{
-                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
                                 }
                                 
                             }else if(tipo=="Double"&&res.tipo=="Int"){
-                                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
                             }else if(tipo=="Int"&&res.tipo=="Boolean"){
                                 if(res.valor.toString().toLowerCase()=="true"){
-                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,1,raiz.fila,raiz.columna)
+                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,1,raiz.hijos[0].fila,raiz.hijos[0].columna)
                                 }else{
-                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,0,raiz.fila,raiz.columna)
+                                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,0,raiz.hijos[0].fila,raiz.hijos[0].columna)
                                 }
                                 
                             }else{
@@ -171,7 +172,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].hijos[0].valor+"\"",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
                     }
                 }else{
-                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede realizar un decremento en el ambito global",raiz.fila,raiz.columna));
+                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede realizar un decremento en el ambito global",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
                 }
             }
             break;
@@ -225,7 +226,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     if(res.tipo=="Int"){
                         vector1 = new lista.listaVec(raiz.hijos[2].valor,parseInt(res.valor))
                         simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
-                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.hijos[2].fila,raiz.hijos[2].columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -279,7 +280,7 @@ function interpretar (raiz,ambito, lugar, pasada){
 
                     }
                     simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
-                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,vector1.reg(),raiz.hijos[0].fila,raiz.hijos[0].columna)
                     if(simbolo!=null){
                         if(simbolo.entorno==ambito){
                             if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -306,7 +307,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         vector1 = new lista.listaVec(tipo,les.length)
                         
                         simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
-                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,res1.valor,raiz.fila,raiz.columna)
+                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV",raiz.hijos[0].valor,ambito,res1.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -338,7 +339,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     if(res1.tipo=="Int"||res2.tipo=="Int"){
                         vector1 = new lista.listaVec2(raiz.hijos[2].valor,parseInt(res1.valor),parseInt(res2.valor))
                         simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
-                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                        sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[2].valor,ambito,vector1.reg(),raiz.hijos[2].fila,raiz.hijos[2].columna)
                         if(simbolo!=null){
                             if(simbolo.entorno==ambito){
                                 if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -398,7 +399,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         }
                     }
                     simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[1].valor,ambito);
-                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[0].valor,ambito,vector2.reg(),raiz.fila,raiz.columna)
+                    sim = new tabsim.simbolo(raiz.hijos[1].valor,"AsignacionV2",raiz.hijos[0].valor,ambito,vector2.reg(),raiz.hijos[0].fila,raiz.hijos[0].columna)
                     if(simbolo!=null){
                         if(simbolo.entorno==ambito){
                             if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
@@ -455,11 +456,11 @@ function interpretar (raiz,ambito, lugar, pasada){
                             }else{
                                 vector1.insertar(res.valor,res1.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
                             }
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.hijos[1].fila,raiz.hijos[1].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else if(tipo=="Double"&&res.tipo=="Int"){
                             vector1.insertar(1,res1.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.hijos[1].fila,raiz.hijos[1].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else if(tipo=="Int"&&res.tipo=="Boolean"){
                             if(res.valor.toString().toLowerCase()=="true"){
@@ -467,7 +468,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                             }else{
                                 vector1.insertar(0,res1.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
                             }
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV",tipo,ambito,vector1.reg(),raiz.hijos[1].fila,raiz.hijos[1].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else{
                             permitido=false;
@@ -538,11 +539,11 @@ function interpretar (raiz,ambito, lugar, pasada){
                             }else{
                                 vector2.insertar(res.valor,res1.valor,res2.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
                             }
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.hijos[2].fila,raiz.hijos[2].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else if(tipo=="Double"&&res.tipo=="Int"){
                             vector2.insertar(1,res1.valor,res2.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.hijos[2].fila,raiz.hijos[2].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else if(tipo=="Int"&&res.tipo=="Boolean"){
                             if(res.valor.toString().toLowerCase()=="true"){
@@ -550,7 +551,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                             }else{
                                 vector2.insertar(0,res1.valor,res2.valor,raiz.hijos[2].fila,raiz.hijos[2].columna)
                             }
-                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.fila,raiz.columna)
+                            sim = new tabsim.simbolo(simbolo.nombre,"AsignacionV2",tipo,ambito,vector2.reg(),raiz.hijos[2].fila,raiz.hijos[2].columna)
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }else{
                             permitido=false;
@@ -583,7 +584,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         }
                         //
                     }else{
-                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[2].hijos[0].fila,raiz.hijos[2].hijos[0].columna));
                         return null;
                     }
                 }else{
@@ -597,6 +598,10 @@ function interpretar (raiz,ambito, lugar, pasada){
                     res = evaluarExpresion(raiz.hijos[0],ambito);
                     
                     let cases = evaluarLCase(res,raiz.hijos[1],ambito,pasada)
+                    if(brk){
+                        brk=false;
+                        return cases.codigo
+                    }
                     if(raiz.hijos[2]!=null){
                         if(!cases.salida){
                             cases.codigo+=interpretar(raiz.hijos[2].hijos[0],ambito,"CSwitch",pasada)
@@ -632,7 +637,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                             return codigo
                         }
                     }else{
-                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
                         return null;
                     }
                 }else{
@@ -660,7 +665,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                                 return codigo
                             }
                         }else{
-                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[1].hijos[0].fila,raiz.hijos[1].hijos[0].columna));
                             return null;
                         }
                     }
@@ -673,7 +678,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                             return codigo
                         }
                     }else{
-                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[1].hijos[0].fila,raiz.hijos[1].hijos[0].columna));
                         return null;
                     }
                 }else{
@@ -684,9 +689,8 @@ function interpretar (raiz,ambito, lugar, pasada){
         case "SFor":
             if(!pasada){
                 if(ambito!="General"){
-                    //console.log("ANDO EN "+raiz.hijos[2].hijos[0].hijos[0].valor)
-                    codigo+=funFor(raiz.hijos[1],raiz.hijos[2],raiz.hijos[3],ambito,true,raiz.hijos[0],ambito,raiz.hijos[0],pasada)
-
+                    //console.log("EMPEZANDO FOR "+pasada)
+                    codigo+=funFor(raiz.hijos[1],raiz.hijos[2],raiz.hijos[3],ambito,true,raiz.hijos[0],pasada)
                     return codigo
                 }else{
                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede utilizar la sentencia \"For\" en el ambito global",raiz.fila,raiz.columna));
@@ -738,13 +742,13 @@ function interpretar (raiz,ambito, lugar, pasada){
                                     
                                     if(tipo=="Int"){
                                         if(-2147483648 <= res.valor && res.valor <= 2147483647){
-                                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
                                         }else{
                                             bien = false;
                                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","os valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                                         }
                                     }else{
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }
                                     //console.log(sim.nombre+" A "+sim.valor)
                                     if(sim!=null){
@@ -752,15 +756,15 @@ function interpretar (raiz,ambito, lugar, pasada){
                                     }
                                     
                                 }else if(tipo=="Double"&&res.tipo=="Int"){
-                                    sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                    sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     if(sim!=null){
                                         tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                                     }
                                 }else if(tipo=="Int"&&res.tipo=="Boolean"){
                                     if(res.valor.toString().toLowerCase()=="true"){
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,1,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }else{
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,0,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,0,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }
                                     if(sim!=null){
                                         tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
@@ -820,13 +824,13 @@ function interpretar (raiz,ambito, lugar, pasada){
                                     
                                     if(tipo=="Int"){
                                         if(-2147483648 <= res.valor && res.valor <= 2147483647){
-                                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                            sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                         }else{
                                             bien = false;
                                             errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                                         }
                                     }else{
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }
                                     //console.log(sim.nombre+" A "+sim.valor)
                                     if(sim!=null){
@@ -835,15 +839,15 @@ function interpretar (raiz,ambito, lugar, pasada){
                                     }
                                     
                                 }else if(tipo=="Double"&&res.tipo=="Int"){
-                                    sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                    sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     if(sim!=null){
                                         tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                                     }
                                 }else if(tipo=="Int"&&res.tipo=="Boolean"){
                                     if(res.valor.toString().toLowerCase()=="true"){
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,1,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,1,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }else{
-                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,0,raiz.hijos[0].fila,raiz.hijos[0].columna)
+                                        sim = new tabsim.simbolo(Sact.nombre,"Asignacion",tipo,ambito,0,raiz.hijos[1].hijos[i].fila,raiz.hijos[1].hijos[i].columna)
                                     }
                                     if(sim!=null){
                                         tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
@@ -873,7 +877,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     id = raiz.hijos[0].valor;
                     LParametros = [];
                     interpretar(raiz.hijos[1],id,"Funcion",false)
-                    sim= new tabsim.simbolo(id,"Funcion",raiz.hijos[2].valor,"General",raiz.hijos[3],id.flia,id.columna)
+                    sim= new tabsim.simbolo(id,"Funcion",raiz.hijos[2].valor,"General",raiz.hijos[3],raiz.hijos[0].fila,raiz.hijos[0].columna)
                     for(i=0;i<raiz.hijos[1].hijos.length;i++){
                         LParametros.push(raiz.hijos[1].hijos[i].hijos[1].hijos[0].valor)
                     }
@@ -907,7 +911,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     id = raiz.hijos[0].valor;
                     LParametros = [];
                     interpretar(raiz.hijos[1],id,"Metodo",false)
-                    sim= new tabsim.simbolo(id,"Metodo","","General",raiz.hijos[2],id.flia,id.columna)
+                    sim= new tabsim.simbolo(id,"Metodo","void","General",raiz.hijos[2],raiz.hijos[0].fila,raiz.hijos[0].columna)
                     for(i=0;i<raiz.hijos[1].hijos.length;i++){
                         LParametros.push(raiz.hijos[1].hijos[i].hijos[1].hijos[0].valor)
                     }
@@ -944,6 +948,7 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini,pasada){
     let codigo=""
     if(primero){
         permitir=true;
+        //console.log("VOY A INICIAR "+pasada)
         codigo+=interpretar(ini,ambito,"SFor",pasada)
     }
     
@@ -971,7 +976,7 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini,pasada){
             return codigo
         }
     }else{
-        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].fila,raiz.hijos[0].columna));
+        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[0].hijos[0].fila,raiz.hijos[0].hijos[0].columna));
         return "";
     }
 
@@ -1000,12 +1005,16 @@ function tabla (){
 
 function evaluarLCase(exp,raiz,ambito,pasada){
     let analiz = new analizao()
+    //console.log(raiz.hijos[raiz.hijos.length-1])
     for (let i = 0; i < raiz.hijos.length; i++) {
         res = evaluarExpresion(raiz.hijos[i].hijos[0],ambito);
         let condicion = relacionales.igualacion(exp,res,raiz.hijos[i].hijos[0].fila,raiz.hijos[i].hijos[0].columna)
         
         if(condicion.valor=="true"){
             analiz.codigo += interpretar(raiz.hijos[i].hijos[1],ambito,"CSwitch",pasada)
+            if(brk){
+                return analiz;
+            }
             if(raiz.hijos[i].hijos[2]!=null){
                 analiz.salida = true;
                 return analiz;
@@ -1015,13 +1024,13 @@ function evaluarLCase(exp,raiz,ambito,pasada){
     return analiz;
 }
 
-function variable(tipo,raiz,ambito){
+function variable(tipo,raiz,ambito,lugar){
     let sim;
     let valo;
     
     switch(raiz.etiqueta){
         case "Dec":
-            raiz.hijos.forEach(hijo=> variable(tipo,hijo,ambito))
+            raiz.hijos.forEach(hijo=> variable(tipo,hijo,ambito,lugar))
             break;
         case "id":
             //(nombre,tipo1,tipo2,valor,linea,columna)
@@ -1062,25 +1071,26 @@ function variable(tipo,raiz,ambito){
             break;
         case "Asig":
             res=evaluarExpresion(raiz.hijos[1],ambito);
-            
+            //console.log("ANDO EN ASIG "+lugar+" ")
+            //console.log(raiz.hijos[0])
             if (tipo==res.tipo){
                 if(tipo=="Int"){
                     if(-2147483648 <= res.valor && res.valor <= 2147483647){
-                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                        sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     }else{
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","os valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                     }
                 }else{
-                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
                 }
                 
             }else if(tipo=="Double"&&res.tipo=="Int"){
-                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.fila,raiz.columna)
+                sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
             }else if(tipo=="Int"&&res.tipo=="Boolean"){
                 if(res.valor.toString().toLowerCase()=="true"){
-                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,1,raiz.fila,raiz.columna)
+                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,1,raiz.hijos[1].fila,raiz.hijos[1].columna)
                 }else{
-                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,0,raiz.fila,raiz.columna)
+                    sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,0,raiz.hijos[1].fila,raiz.hijos[1].columna)
                 }
                 
             }else{

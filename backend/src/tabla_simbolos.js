@@ -104,14 +104,17 @@ var tabla = (function(){
                             valor=simbolo.valor;
                         }
                     }
-
+                    let lin,col
+                
                     simb.push({
                         cuenta:cuenta,
                         nombre:simbolo.nombre,
                         tipo1:simbolo.tipo1,
                         tipo2:simbolo.tipo2,
                         entorno:simbolo.entorno,
-                        valor:valor
+                        valor:valor,
+                        linea:simbolo.linea,
+                        columna:simbolo.columna
                     })
                     
                     cuenta++;
@@ -122,7 +125,7 @@ var tabla = (function(){
             })
             
             texto.simbolos=simb
-            console.log(texto)
+            
             return (texto);
         } 
 

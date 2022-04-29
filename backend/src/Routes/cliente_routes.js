@@ -7,5 +7,6 @@ router.get("/cliente", control.index)
 router.get("/tsim", control.TSimbolos)
 router.post("/analizar", control.Analizar)
 router.get("/ast", control.Ast)
+router.get("/err", control.TErrores)
 
 module.exports = router

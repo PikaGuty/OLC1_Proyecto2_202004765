@@ -28,5 +28,10 @@ export class BackendService {
     //console.log(cuerpo)
     return this.http.get(`${this.URL}/tsim`)
   }
+
+  TErrores(){
+    //console.log(cuerpo)
+    return this.http.get(`${this.URL}/err`)
+  }
   
 }

@@ -45,6 +45,26 @@ var ListaErrores = (function(){
             }
             return texto;
         }
+
+        getTabErrores(){
+            var texto={};
+            var simb=[]
+
+            var err=this.inicial;
+            while(err!=null){
+                simb.push({
+                    tipo:err.tipo,
+                    descripcion:err.descripcion,
+                    linea:err.fila,
+                    columna:err.columna
+                })
+                err=err.siguiente;
+            }
+            console.log(simb)
+            texto.errores=simb
+            
+            return (texto);
+        }
     
         borrarErrores(){
             this.inicial=null;

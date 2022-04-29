@@ -41,7 +41,12 @@ exports.Analizar = async(req, res) =>{
 
 exports.TSimbolos = async(req, res) =>{
     //console.log(ts.tabla.getInstancia().getTablaSimbolos())
-    res.send({simbolos:ts.tabla.getInstancia().getTablaSimbolos()})
+    res.send(ts.tabla.getInstancia().getTablaSimbolos())
+}
+
+exports.TErrores = async(req, res) =>{
+    console.log(errores.ListaErrores.getInstance().getTabErrores())
+    res.send(errores.ListaErrores.getInstance().getTabErrores())
 }
 
 exports.Ast = async(req,res)=>{

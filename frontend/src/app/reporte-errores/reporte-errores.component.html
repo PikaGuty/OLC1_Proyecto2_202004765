@@ -17,7 +17,31 @@
                                     <h6 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-bug"></i> Reporte de errores</h6>
                                 </div>
                                 <div class="card-body">
-                                    AQUI
+                                    <div class="card-body" style=" overflow:auto; ">
+                                        <ng-container *ngIf="errores">
+                                            <table class="table">
+                                                <thead class="thead-dark">
+                                                  <tr>
+                                                    
+                                                    <th scope="col">Tipo</th>
+                                                    <th scope="col">Descripcion</th>
+                                                    <th scope="col">Linea</th>
+                                                    <th scope="col">Columna</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <tr *ngFor="let err of errores">
+                                                    
+                                                    <td>{{err.tipo}}</td>
+                                                    <td>{{err.descripcion}}</td>
+                                                    <td>{{err.linea}}</td>
+                                                    <td>{{err.columna}}</td>
+                                                  </tr>
+                                                  
+                                                </tbody>
+                                              </table>
+                                        </ng-container>
+                                    </div>
                                 </div>
                             </div>
                         </div>

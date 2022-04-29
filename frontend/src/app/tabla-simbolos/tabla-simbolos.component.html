@@ -16,8 +16,36 @@
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary"><i class="fa-solid fa-table"></i> Tabla de Símbolos</h6>
                                 </div>
-                                <div class="card-body">
-                                    AQUI
+                                <div class="card-body" style=" overflow:auto; ">
+                                    <ng-container *ngIf="simbolos">
+                                        <table class="table">
+                                            <thead class="thead-dark">
+                                              <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Entorno</th>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Tipo 1</th>
+                                                <th scope="col">Tipo 2</th>
+                                                <th scope="col">Valor</th>
+                                                <th scope="col">Linea</th>
+                                                <th scope="col">Columna</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody>
+                                              <tr *ngFor="let simb of simbolos">
+                                                <th scope="row">{{simb.cuenta}}</th>
+                                                <td>{{simb.entorno}}</td>
+                                                <td>{{simb.nombre}}</td>
+                                                <td>{{simb.tipo1}}</td>
+                                                <td>{{simb.tipo2}}</td>
+                                                <td>{{simb.valor}}</td>
+                                                <td>{{simb.linea}}</td>
+                                                <td>{{simb.columna}}</td>
+                                              </tr>
+                                              
+                                            </tbody>
+                                          </table>
+                                    </ng-container>
                                 </div>
                             </div>
                         </div>
