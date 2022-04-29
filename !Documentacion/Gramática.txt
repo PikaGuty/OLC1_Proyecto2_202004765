@@ -1,0 +1,182 @@
+Gramática Libre de Contexto
+	G=(V,T,P,S)
+V Conjunto de variables
+	ini, instrucciones, instrucción, tipo, expresion, lista, listavec, declaracion, dec, asig, asig_solo, casteo, inc_dec, dec_vectores, acs_vectores, mod_vectores, terna, sen_if, sen_switch, list_case, s_case, s_default, sen_while, sen_for, sen_dowhile, sen_return, funcion, parametros, parmetro, metodos, llamada, parametros_llamada, fprint, fprintln, ftolower, ftoupper, fround, flength, ftypeof, ftostring, ftochararray, frun.
+
+T Conjunto de terminales
+	R_INT, R_DOUBLE, R_BOOLEAN, R_CHAR, R_STRING, R_TRUE, R_FALSE, R_NEW, R_IF, R_ELSE, R_SWITCH, R_CASE, R_DEFAULT, R_WHILE, R_FOR, R_DO, R_BREAK, R_CONTINUE, R_RETURN, R_VOID, R_PRINT, R_PRINTLN, R_TOLOWER, R_TOUPPER, R_ROUND, R_LENGTH, R_TYPEOF, R_TOSTRING, R_TOCHARARRAY, R_RUN, DOSPTS, PTCOMA, LLAVIZQ, LLAVDER, PARIZQ, PARDER, CORIZQ, CORDER, COMA, IGUALACION, DIFERENCIACION, MENIGUALQ, MAYIGUALQ, MENORQ, MAYORQ, DIF, OR, AND, INTERROG, INCRE, DECRE, MAS, MENOS, POR, DIV, POTENCIA, MODULO, IGUAL, DECIMAL, ENTERO, IDENTIFICADOR, CARÁCTER, CADENA,
+
+P Conjunto finito de producciones
+	<ini> ::= <instrucciones> EOF 
+    	| EOF 
+
+	<instrucciones> ::= <instrucciones> <instruccion> 
+    	| <instruccion>
+
+	<instruccion> ::= <declaracion> PTCOMA 
+    	| <inc_dec> PTCOMA 
+    	| <dec_vectores> PTCOMA
+    	| <mod_vectores> PTCOMA
+    	| <sen_if>
+    	| <asig_solo> PTCOMA
+    	| <sen_switch>
+    	| <sen_while>
+    	| <sen_for>
+    	| <sen_dowhile> PTCOMA
+    	| <sen_return> PTCOMA
+    	| R_BREAK PTCOMA
+    	| R_CONTINUE PTCOMA
+    	| <metodos>
+    	| <funcion>
+    	| <llamada> PTCOMA
+    	| <fprint> PTCOMA
+    	| <fprintln> PTCOMA
+    	| <frun> PTCOMA
+
+	<tipo> ::= R_INT
+    	| R_DOUBLE
+    	| R_BOOLEAN
+    	| R_CHAR
+    	| R_STRING
+
+	<expresion> ::= <expresion> POTENCIA <expresion>
+    	| <expresion> MAS <expresion> 
+    	| <expresion> MENOS <expresion> 
+    	| <expresion> POR <expresion> 
+    	| <expresion> DIV <expresion>
+    	| <expresion> MODULO <expresion> 
+    	| MENOS <expresion>
+    	| PARIZQ <expresion> PARDER 
+    	| DIF <expresion>
+    	| <expresion> IGUALACION <expresion> 
+    	| <expresion> DIFERENCIACION <expresion> 
+    	| <expresion> MENIGUALQ <expresion>
+    	| <expresion> MAYIGUALQ <expresion>
+    	| <expresion MENORQ <expresion>
+    	| <expresion MAYORQ <expresion>
+    	| <expresion> OR <expresion>
+    	| <expresion> AND <expresion> 
+    	| ENTERO 
+    	| DECIMAL 
+    	| R_TRUE 
+    	| R_FALSE 
+    	| IDENTIFICADOR 
+    	| CARACTER 
+    	| CADENA 
+    	| <acs_vectores>
+    	| <casteo>
+    	| <ftolower>
+    	| <ftoupper>
+    	| <fround>
+    	| <flength>
+    	| <ftypeof>
+    	| <ftostring>
+    	| <ftochararray>
+    	| <llamada>
+    	| <inc_dec>
+    	| <terna>
+
+	<lista> ::= <lista> COMA <expresion>
+    	| <expresion>
+
+	<listavec>::= <listavec> COMA CORIZQ <lista> CORDER 
+    	| CORIZQ <lista> CORDER 
+
+	<declaracion> ::= <tipo> <dec>
+
+	<dec> ::= <dec> COMA <asig>
+    	| <asig >
+
+	<asig> ::= IDENTIFICADOR IGUAL <expresion>
+    	| IDENTIFICADOR
+
+	<asig_solo> ::= IDENTIFICADOR IGUAL <expresion>
+
+	<casteo> ::= PARIZQ <tipo> PARDER <expresion>
+
+	<inc_dec> ::= <expresion> INCRE
+    	| <expresion> DECRE
+
+	<dec_vectores> ::= <tipo> IDENTIFICADOR CORIZQ CORDER IGUAL R_NEW <tipo> CORIZQ <expresion> CORDER
+    	| <tipo> IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL R_NEW <tipo> CORIZQ <expresion> CORDER CORIZQ <expresion> CORDER
+    	| <tipo> IDENTIFICADOR CORIZQ CORDER IGUAL CORIZQ <lista> CORDER
+    	| <tipo> IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ <listavec> CORDER
+    	| <tipo> IDENTIFICADOR CORIZQ CORDER IGUAL <expresion>
+    	| <tipo> IDENTIFICADOR CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ <lista> CORDER 
+
+	<acs_vectores> ::= IDENTIFICADOR CORIZQ <expresion> CORDER
+    	| IDENTIFICADOR CORIZQ <expresion> CORDER CORIZQ <expresion> CORDER 
+
+	<mod_vectores> ::= IDENTIFICADOR CORIZQ <expresion> CORDER IGUAL <expresion>
+    	| IDENTIFICADOR CORIZQ <expresion> CORDER CORIZQ <expresion> CORDER IGUAL <expresion>
+
+	<terna> ::= <expresion> INTERROG <expresion> DOSPTS <expresion> 
+
+	<sen_if> ::= R_IF PARIZQ <expresion> PARDER LLAVIZQ <instrucciones> LLAVDER 
+    	| R_IF PARIZQ <expresion> PARDER LLAVIZQ <instrucciones> LLAVDER R_ELSE LLAVIZQ <instrucciones> LLAVDER 
+    	| R_IF PARIZQ <expresion> PARDER LLAVIZQ <instrucciones> LLAVDER R_ELSE <sen_if>
+
+	sen_switch ::= R_SWITCH PARIZQ <expresion> PARDER LLAVIZQ <list_case> <s_default>  LLAVDER
+   	| R_SWITCH PARIZQ <expresion> PARDER LLAVIZQ <list_case> LLAVDER
+    	| R_SWITCH PARIZQ <expresion> PARDER LLAVIZQ <s_default> LLAVDER
+
+	<list_case> ::= <list_case> <s_case>
+    	|<s_case>
+
+	<s_case> ::= R_CASE <expresion> DOSPTS <instrucciones>
+
+	<s_default> ::= R_DEFAULT DOSPTS <instrucciones>
+
+	<sen_while> ::= R_WHILE PARIZQ <expresion> PARDER LLAVIZQ <instrucciones> LLAVDER 
+
+	<sen_for> ::= R_FOR PARIZQ <declaracion> PTCOMA <expresion> PTCOMA <inc_dec> PARDER LLAVIZQ <instrucciones> LLAVDER 
+    	| R_FOR PARIZQ <asig_solo> PTCOMA <expresion> PTCOMA <inc_dec> PARDER LLAVIZQ <instrucciones> LLAVDER 
+    	| R_FOR PARIZQ <declaracion> PTCOMA <expresion> PTCOMA <asig_solo> PARDER LLAVIZQ <instrucciones> LLAVDER 
+	| R_FOR PARIZQ <asig_solo> PTCOMA <expresion> PTCOMA <asig_solo> PARDER LLAVIZQ <instrucciones> LLAVDER 
+
+	<sen_dowhile> ::= R_DO LLAVIZQ <instrucciones> LLAVDER R_WHILE PARIZQ <expresion> PARDER 
+
+	<sen_return> ::= R_RETURN <expresion>
+
+	<funcion> ::= IDENTIFICADOR PARIZQ <parametros> PARDER DOSPTS <tipo> LLAVIZQ <instrucciones> LLAVDER 
+    	| IDENTIFICADOR PARIZQ PARDER DOSPTS <tipo> LLAVIZQ <instrucciones> LLAVDER 
+
+	<parametros> ::= <parametros> COMA <parmetro>
+    	| <parmetro>
+
+	<parmetro> ::= <tipo> IDENTIFICADOR 
+
+	<metodos> ::= IDENTIFICADOR PARIZQ <parametros> PARDER LLAVIZQ <instrucciones> LLAVDER 
+    	| IDENTIFICADOR PARIZQ <parametros> PARDER DOSPTS R_VOID LLAVIZQ <instrucciones> LLAVDER 
+    	| IDENTIFICADOR PARIZQ PARDER LLAVIZQ <instrucciones> LLAVDER 
+    	| IDENTIFICADOR PARIZQ PARDER DOSPTS R_VOID LLAVIZQ <instrucciones> LLAVDER 
+
+	<llamada> ::= IDENTIFICADOR PARIZQ PARDER 
+    	| IDENTIFICADOR PARIZQ <parametros_llamada> PARDER 
+
+	<parametros_llamada> ::= <parametros_llamada> COMA <expresion>
+    	| <expresion> 
+
+	<fprint> ::= R_PRINT PARIZQ <expresion> PARDER  
+
+	<fprintln> ::= R_PRINTLN PARIZQ <expresion> PARDER
+
+	<ftolower> ::= R_TOLOWER PARIZQ <expresion> PARDER 
+
+	<ftoupper> ::= R_TOUPPER PARIZQ <expresion> PARDER 
+
+	<fround> ::= R_ROUND PARIZQ <expresion> PARDER 
+
+	<flength> ::= R_LENGTH PARIZQ <expresion> PARDER 
+
+	<ftypeof> ::= R_TYPEOF PARIZQ <expresion> PARDER 
+
+	<ftostring> ::= R_TOSTRING PARIZQ <expresion> PARDER 
+
+	<ftochararray> ::= R_TOCHARARRAY PARIZQ <expresion> PARDER 
+
+	<frun> ::= R_RUN <llamada>
+
+
+S Simbolo Inicial
+	ini
