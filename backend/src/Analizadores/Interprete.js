@@ -37,7 +37,14 @@ function interpretar (raiz,ambito, lugar, pasada){
             return codigo;
         case "Var":
             //console.log(ambito+" "+lugar+" "+" "+raiz.hijos[1].valor+" "+raiz.hijos[1].hijos[0].valor+" ")
-            if(!pasada){
+            if(pasada){
+                let t = raiz.hijos[0];
+                //console.log(ambito+" "+lugar+" "+t.valor+" "+raiz.hijos[1].valor+" "+raiz.hijos[1].hijos[0].valor+" ")
+                raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito,lugar))
+                codigo = codFun;
+                codFun = ""
+                return codigo;
+            }else if(!pasada&&ambito!="General"){
                 let t = raiz.hijos[0];
                 //console.log(ambito+" "+lugar+" "+t.valor+" "+raiz.hijos[1].valor+" "+raiz.hijos[1].hijos[0].valor+" ")
                 raiz.hijos.forEach(hijo=> variable(t.valor,hijo,ambito,lugar))
@@ -85,7 +92,9 @@ function interpretar (raiz,ambito, lugar, pasada){
             if(!pasada){
                 if(ambito!="General"){
                     res=evaluarExpresion(raiz.hijos[1],ambito);
+                    //console.log("AQUI LLAMO A BUSCAR")
                     simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambito);
+                    //console.log("AAAAAA "+simbolo)
                     if(simbolo!=null){
 
                         if(res.otro!="Lista"){
@@ -421,8 +430,8 @@ function interpretar (raiz,ambito, lugar, pasada){
             }
             break;
         case "modVec1":
-            if(!pasada){
-                if(ambito!="General"){
+            //if(!pasada){
+                //if(ambito!="General"){
                     res = new ResultadoOp();
                     
                     res1=evaluarExpresion(raiz.hijos[1],ambito);
@@ -478,14 +487,14 @@ function interpretar (raiz,ambito, lugar, pasada){
                     }else{
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].valor+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                     }
-                }else{
-                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar los vectores en el ambito global",raiz.fila,raiz.columna));
-                }
-            }
+                //}else{
+                    //errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar los vectores en el ambito global",raiz.fila,raiz.columna));
+                //}
+            //}
             break;
         case "modVec2":
-            if(!pasada){
-                if(ambito!="General"){
+            //if(!pasada){
+                //if(ambito!="General"){
                     res1=evaluarExpresion(raiz.hijos[1],ambito);
                     res2=evaluarExpresion(raiz.hijos[2],ambito);
                     res = evaluarExpresion(raiz.hijos[3],ambito);
@@ -562,10 +571,10 @@ function interpretar (raiz,ambito, lugar, pasada){
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].valor+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                         
                     }
-                }else{
-                    errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar un vector en el ambito global",raiz.fila,raiz.columna));
-                }
-            }
+                //}else{
+                    //errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar un vector en el ambito global",raiz.fila,raiz.columna));
+                //}
+            
             break;
         case "CIf":
             if(!pasada){
@@ -1366,7 +1375,7 @@ function evaluarExpresion(raiz,ambi){
                             tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }
                         //console.log(raiz.hijos[1].valor)
-                        codigo+=interpretar(simbolo.valor,id,"Funcion",pasada)
+                        codigo+=interpretar(simbolo.valor,id,"Funcion",false)
                         if(rtrn){
                             rtrn=false;
                             

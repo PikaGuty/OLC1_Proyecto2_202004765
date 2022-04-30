@@ -31,6 +31,7 @@ exports.Analizar = async(req, res) =>{
     console.log("******************************************")
     console.log(dot)
     console.log("******************************************")
+    semantico.tabla();
 
     semantico.interpretar(resultado,"General","Normal",true)
     let codigo = semantico.interpretar(resultado, "General", "Normal", false)

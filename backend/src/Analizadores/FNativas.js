@@ -9,7 +9,7 @@ module.exports = {
                 res.tipo="String";
                 cad=v1.valor.toString().split("");
                 cadr ="";
-                for (let i = 1; i < cad.length-1; i++) {
+                for (let i = 0; i < cad.length; i++) {
                     cadr += cad[i];
                 }
                 res.valor=cadr.toLowerCase();
@@ -29,7 +29,7 @@ module.exports = {
                 res.tipo="String";
                 cad=v1.valor.toString().split("");
                 cadr ="";
-                for (let i = 1; i < cad.length-1; i++) {
+                for (let i = 0; i < cad.length; i++) {
                     cadr += cad[i];
                 }
                 res.valor=cadr.toUpperCase();

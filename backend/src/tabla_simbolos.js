@@ -41,8 +41,12 @@ var tabla = (function(){
         getSimboloP(nombre,ambito){
             let res = null;
             let flag=false
+            //console.log("ANDO BUSCANDO "+nombre+" en el ambito "+ambito)
             this.simbolos.forEach(simbolo=>{
+                //console.log(simbolo.nombre+"=="+nombre+" && "+simbolo.entorno+"=="+ambito)
                 if(simbolo.nombre==nombre&&simbolo.entorno==ambito){
+                    
+                    //console.log("ENCONTRE EN EL MISMO AMBITO")
                     res=simbolo;
                     flag=true;
                 }
@@ -50,6 +54,7 @@ var tabla = (function(){
             if(!flag){
                 this.simbolos.forEach(simbolo=>{
                     if(simbolo.nombre==nombre&&simbolo.entorno=="General"){
+                        //console.log("ENCONTRE EN EL GENERAL")
                         res=simbolo;
                     }
                 })
