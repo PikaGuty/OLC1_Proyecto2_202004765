@@ -17,5 +17,5 @@ fs.readFile('./entrada.txt', (err, data) => {
     console.log(ts.tabla.getInstancia().getTablaSimbolos())
     console.log("\nSALIDA\n")
     console.log(codigo)
-});
+}); 
 

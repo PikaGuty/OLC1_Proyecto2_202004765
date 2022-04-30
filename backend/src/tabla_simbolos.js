@@ -42,10 +42,10 @@ var tabla = (function(){
             let res = null;
             let flag=false
             //console.log("ANDO BUSCANDO "+nombre+" en el ambito "+ambito)
+            //console.log(this.simbolos)
             this.simbolos.forEach(simbolo=>{
                 //console.log(simbolo.nombre+"=="+nombre+" && "+simbolo.entorno+"=="+ambito)
                 if(simbolo.nombre==nombre&&simbolo.entorno==ambito){
-                    
                     //console.log("ENCONTRE EN EL MISMO AMBITO")
                     res=simbolo;
                     flag=true;

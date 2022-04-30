@@ -228,7 +228,7 @@ function interpretar (raiz,ambito, lugar, pasada){
             } 
             break;
         case "DecVec1":
-            if(!pasada){
+            if((!pasada&&ambito!="General")||(pasada&&ambito=="General")){
                 vector1=null;
                 if(raiz.hijos[0].valor==raiz.hijos[2].valor){
                     res=evaluarExpresion(raiz.hijos[3],ambito);
@@ -340,7 +340,7 @@ function interpretar (raiz,ambito, lugar, pasada){
             }
             break;
         case "DecVec2":
-            if(!pasada){
+            if((!pasada&&ambito!="General")||(pasada&&ambito=="General")){
                 vector1=null;
                 if(raiz.hijos[0].valor==raiz.hijos[2].valor){
                     res1=evaluarExpresion(raiz.hijos[3],ambito);
@@ -430,28 +430,33 @@ function interpretar (raiz,ambito, lugar, pasada){
             }
             break;
         case "modVec1":
-            //if(!pasada){
-                //if(ambito!="General"){
-                    res = new ResultadoOp();
-                    
+            if((!pasada&&ambito!="General")||(pasada&&ambito=="General")){
+                
                     res1=evaluarExpresion(raiz.hijos[1],ambito);
+                    res=evaluarExpresion(raiz.hijos[2],ambito);
+                    
                     simbolo = tabsim.tabla.getInstancia().getSimboloP(raiz.hijos[0].valor,ambito);
                     //console.log("RES")
+                    //console.log(raiz.hijos[0].valor)
                     if(simbolo!=null){
                         let list = simbolo.valor.split("")
-                        let valores=[]
+                        let valores=""
                         
                         for (let i = 1; i < list.length-1; i++) {
-                            if(list[i]!=","){
-                                valores.push(list[i])
-                            }
+                            valores+=(list[i])
                         }
-                        let vector1 = new lista.listaVec(simbolo.tipo2,valores.length)
+                        //console.log(valores)
+                        list = valores.split(",")
                         
+                        valores=list
+                        
+                        //console.log(valores)
+                        //console.log("AAAAAAAAAAA "+valores.length)
+                        let vector1 = new lista.listaVec(simbolo.tipo2,valores.length)
                         for (let i = 0; i < valores.length; i++) {
                             vector1.insertar(valores[i],i,raiz.hijos[1].fila,raiz.hijos[1].columna);
                         }
-                        res=evaluarExpresion(raiz.hijos[2],ambito);
+                        
                         
                         let tipo = simbolo.tipo2
                         if (tipo==res.tipo){
@@ -487,13 +492,11 @@ function interpretar (raiz,ambito, lugar, pasada){
                     }else{
                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No existe una variable con el identificador: \""+raiz.hijos[0].valor+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                     }
-                //}else{
-                    //errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar los vectores en el ambito global",raiz.fila,raiz.columna));
-                //}
-            //}
+                
+            }
             break;
         case "modVec2":
-            //if(!pasada){
+            if((!pasada&&ambito!="General")||(pasada&&ambito=="General")){
                 //if(ambito!="General"){
                     res1=evaluarExpresion(raiz.hijos[1],ambito);
                     res2=evaluarExpresion(raiz.hijos[2],ambito);
@@ -573,7 +576,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                     }
                 //}else{
                     //errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","No se puede modificar un vector en el ambito global",raiz.fila,raiz.columna));
-                //}
+            }
             
             break;
         case "CIf":
@@ -593,7 +596,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                         }
                         //
                     }else{
-                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.hijos[2].hijos[0].fila,raiz.hijos[2].hijos[0].columna));
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La condición debe devolver un valor Booleano (true o false)",raiz.fila,raiz.columna));
                         return null;
                     }
                 }else{

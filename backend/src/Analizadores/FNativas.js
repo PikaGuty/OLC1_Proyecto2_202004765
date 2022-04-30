@@ -85,7 +85,7 @@ module.exports = {
             res.otro="Lista"
             return res;
         }else{
-            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"length\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
+            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","La función \"toCharArray\" solo recibe como parámetro una expresión de tipo cadena, listas y vectores",fila,columna));
             res.tipo="error";
             res.valor="error";
             return res;
@@ -113,13 +113,12 @@ module.exports = {
                     case "AsignacionV":
                         res.tipo="Int";
                         list = v1.valor.split("")
-
-                        valores=[]
+                        valores=""
                         for (let i = 1; i < list.length-1; i++) {
-                            if(list[i]!=","){
-                                valores.push(list[i])
-                            }
+                            valores+=(list[i])
                         }
+                        list = valores.split(",")
+                        valores=list
                         res.valor=valores.length
                         return res;
                     case "AsignacionV2":

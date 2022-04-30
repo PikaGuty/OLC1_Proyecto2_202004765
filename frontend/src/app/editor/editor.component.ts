@@ -34,11 +34,12 @@ export class EditorComponent implements OnInit {
         //alert("BIEN")
         js = JSON.parse(JSON.stringify(res)) 
         this.consola= js.Respuesta
-        alert("Bien")
+        alert("Se ha nalizado correctamente")
         console.log("has",js.Respuesta)
       },
       err=>{
         alert("Ocurrió un error")
+        this.consola= "Ocurrió un error, revisar reporte de errores"
       }
     )
     
@@ -77,7 +78,7 @@ export class EditorComponent implements OnInit {
     var name=prompt("Ingrese el nombre con el que desea guardar el archivo cst","");
     var file = new File([this.contenido], name+".cst", {type: "text/plain;charset=utf-8"});
     FileSaver.saveAs(file);
-    alert(this.contenido)
+    
   }
 
 }
