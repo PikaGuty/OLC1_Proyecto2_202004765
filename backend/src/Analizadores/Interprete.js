@@ -105,6 +105,7 @@ function interpretar (raiz,ambito, lugar, pasada){
                                         sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[0].fila,raiz.hijos[0].columna)
 
                                     }else{
+                                        //console.log("ESTABA INTENTANDO METER "+res.valor)
                                         errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                                     }
                                 }else{
@@ -962,6 +963,7 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini,pasada){
         permitir=true;
         //console.log("VOY A INICIAR "+pasada)
         codigo+=interpretar(ini,ambito,"SFor",pasada)
+
     }
     
     condicion=evaluarExpresion(cond,ambito);
@@ -975,10 +977,10 @@ function funFor(cond,actualizacion,raiz,ambito,primero,ini,pasada){
                 return codigo;
             }else if(ctn){
                 ctn=false
-                interpretar(actualizacion,ambito,"Normal",pasada)
+                interpretar(actualizacion,ambito,"SFor",pasada)
                 codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini,pasada)
             }else{
-                interpretar(actualizacion,ambito,"Normal",pasada)
+                interpretar(actualizacion,ambito,"SFor",pasada)
                 codigo+=funFor(cond,actualizacion,raiz,ambito,false,ini,pasada)
             }
             
@@ -1067,10 +1069,16 @@ function variable(tipo,raiz,ambito,lugar){
                 let simbolo = tabsim.tabla.getInstancia().getSimboloP(sim.nombre,ambito);
                 if(simbolo!=null){
                     if(simbolo.entorno==ambito){
-                        if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
-                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.fila,raiz.columna));
-                        }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
-                            errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre "+sim.nombre,raiz.fila,raiz.columna));
+                        if(!permitir){
+                            if(simbolo.tipo1=="Asignacion"||simbolo.tipo1=="Declaracion"||simbolo.tipo1=="Incremento"||simbolo.tipo1=="Decremento"||simbolo.tipo1=="AsignacionV"||simbolo.tipo1=="AsignacionV2"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una varible con el nombre \""+sim.nombre+"\"",raiz.fila,raiz.columna));
+                            }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
+                                errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre "+sim.nombre,raiz.fila,raiz.columna));
+                            }
+                        }else if(lugar=="SFor"){
+                            tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
+                        }else{
+                            tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                         }
                     }else{
                         tabsim.tabla.getInstancia().pushSimbolo(sim)
@@ -1090,7 +1098,7 @@ function variable(tipo,raiz,ambito,lugar){
                     if(-2147483648 <= res.valor && res.valor <= 2147483647){
                         sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
                     }else{
-                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","os valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
+                        errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Los valores permitidos para variables de tipo entero son entre -2147483648 y 2147483647",raiz.hijos[1].fila,raiz.hijos[1].columna));
                     }
                 }else{
                     sim = new tabsim.simbolo(raiz.hijos[0].valor,"Asignacion",tipo,ambito,res.valor,raiz.hijos[1].fila,raiz.hijos[1].columna)
@@ -1108,6 +1116,7 @@ function variable(tipo,raiz,ambito,lugar){
             }else{
                 errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Error semantico, el dato \""+res.valor+"\" no es de tipo \""+tipo+"\"",raiz.hijos[1].fila,raiz.hijos[1].columna));
             }
+            //console.log(lugar)
             if(sim!=null){
                 if(res.otro!="Lista"){
                     let simbolo = tabsim.tabla.getInstancia().getSimboloP(sim.nombre,ambito);
@@ -1119,6 +1128,8 @@ function variable(tipo,raiz,ambito,lugar){
                                 }else if(simbolo.tipo1=="Funcion"||simbolo.tipo1=="Metodo"){
                                     errores.ListaErrores.getInstance().pushError(new errores.error("Semantico","Ya existe una función o método con el nombre \""+sim.nombre+"\"",raiz.hijos[0].fila,raiz.hijos[0].columna));
                                 }
+                            }else if(lugar=="SFor"){
+                                tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                             }else{
                                 tabsim.tabla.getInstancia().modificarSimboloP(sim,ambito)
                             }
